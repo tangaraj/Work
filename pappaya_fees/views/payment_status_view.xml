@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+        <record id="bank_payment_status_form" model="ir.ui.view">
+			<field name="name">Payment Status Form</field>
+			<field name="model">bank.deposit.clearance</field>
+			<field name="arch" type="xml">
+				<form string="Payment Status" duplicate="0" create="false">
+					<header>
+						 <field name="payment_line_status" widget="statusbar" statusbar_visible="uncleared,cleared" invisible="1"/>
+					</header>
+					<sheet>
+                        <group>
+                            <group col="4">
+                                <field name="society_id" options="{'no_open': True,'no_create':True}" domain="[('type','=','society')]" required="1" class="asterik" readonly="1"/>
+                                <field name="school_id" options="{'no_open': True,'no_create':True}" domain="[('type','=','school'),('parent_id','=',society_id)]"  required="1" class="asterik" readonly="1"/>
+                                <field name="academic_year_id" domain="[('school_id', '=', school_id)]" options="{'no_open': True,'no_create':True}" required="1" class="asterik" readonly="1"/>
+                                <field name="payment_mode" required="1" class="asterik" readonly="1"/>
+                            	<field name="confirm_on" readonly="1"/>
+                            	<field name="cleared_date" attrs="{'invisible': [('payment_line_status','not in',['cleared'])]}" readonly="1"/>
+                            </group>
+                        </group>
+                        
+						<!--Cheque-->
+                        <separator string="Cheque" attrs="{'invisible': [('payment_mode','not in',['cheque/dd'])],'required': [('payment_mode','in',['cheque/dd'])]}" class="asterik"/>
+                        <!--DD-->
+                        <separator string="Demand Draft (DD)" attrs="{'invisible': [('payment_mode','not in',['dd'])],'required': [('payment_mode','in',['dd'])]}" class="asterik"/>
+                        <!--POS-->
+                        <separator string="PoS" attrs="{'invisible': [('payment_mode','not in',['card'])],'required': [('payment_mode','in',['card'])]}" class="asterik"/>
+                        <!--Neft/RTGS-->
+                        <separator string="Neft/RTGS" attrs="{'invisible': [('payment_mode','not in',['neft/rtgs'])],'required': [('payment_mode','in',['neft/rtgs'])]}" class="asterik"/>
+                        <div class="text-right">
+								<button name="confirm_cleared" string="Cleared" attrs="{'invisible': [('payment_line_status','in',['cleared'])]}"
+									type="object" 
+									class="oe_highlight" 
+							    	groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin"/>
+							    <button name="confirm_rejected" string="Rejected" attrs="{'invisible': [('payment_line_status','in',['cleared'])]}"
+									type="object" 
+									class="oe_highlight" 
+								    groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin"/>
+						</div>
+                        <group>
+	                        <field name="status_line_ids" nolabel="1">
+								<tree create="false" editable="bottom" delete="false" open="false">
+	                            	<field name="receipt_id" invisible="1"/>
+	                                <field name="is_select" attrs="{'readonly':[('read_only','=',True)]}"/>
+	                                <field name="receipt_date" readonly="1"/>
+	                                <field name="name" string="Receipt No" readonly="1"/>
+	                                <field name="grade_id" readonly="1" options="{'no_open': True,'no_create':True}"/>
+	                                <field name="enrollment_number" readonly="1"/>
+	                                <field name="student_id" readonly="1" options="{'no_open': True,'no_create':True}"/>
+	                                <field name="cheque_dd" readonly="1" string="Ref No"/>
+	                                <field name="payment_mode" invisible="1"/>
+	                                <field name="total" readonly="1" string="Paid Amount"/>
+	                                <field name="attachment" filename="file_name" readonly="1"/>
+	                                <field name="file_name" invisible="1"/>
+	                                <field name="remarks" />
+	                                <field name="clear_date" groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin" required="1"/>
+	                                <field name="state" readonly="1"/>
+	                                <field name="read_only" invisible="1"/>
+	                            </tree>
+	                            <form>
+	                            	<field name="receipt_id" invisible="1"/>
+	                                <field name="is_select" attrs="{'readonly':[('read_only','=',True)]}"/>
+	                                <field name="receipt_date" readonly="1"/>
+	                                <field name="name" string="Receipt No" readonly="1"/>
+	                                <field name="grade_id" readonly="1" options="{'no_open': True,'no_create':True}"/>
+	                                <field name="enrollment_number" readonly="1"/>
+	                                <field name="student_id" readonly="1" options="{'no_open': True,'no_create':True}"/>
+	                                <field name="cheque_dd" readonly="1" string="Ref No"/>
+	                                <field name="payment_mode" invisible="1"/>
+	                                <field name="total" readonly="1" string="Paid Amount"/>
+	                                <field name="attachment" filename="file_name" readonly="1"/>
+	                                <field name="file_name" invisible="1"/>
+	                                <field name="clear_date" groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin" invisible="1"/>
+	                                <field name="remarks" />
+	                                <field name="state" readonly="1"/>
+	                                <field name="read_only" invisible="1"/>
+	                            </form>
+	                        </field>
+	                    </group>   
+	                  <group>
+                         <field name="c_bank_id"  options="{'no_open': True,'no_create':True}" domain="[('school_ids', 'in', school_id)]" readonly="1"/>
+                       </group>
+					<group>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" >
+                                <field name="cleared_amt"/>
+                                <field name="uncleared_amt"/>
+                                <field name="rejected_amt"/>
+                                <field name="total_amt" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="remarks" readonly="1"/>
+			            </group>
+                    </sheet>
+				</form>
+			</field>
+		</record>
+
+        <record id="payment_status_tree" model="ir.ui.view">
+			<field name="name">Bank Deposit Clearance Tree</field>
+			<field name="model">bank.deposit.clearance</field>
+			<field name="arch" type="xml">
+				<tree create="false" delete="false" default_order='confirm_on desc,id desc' string="Bank Deposit Clearance">
+                    <field name="society_id"/>
+				    <field name="school_id"/>
+                    <field name="academic_year_id"/>
+                    <field name="payment_mode"/>
+                    <field name="payment_line_status"/>
+                    <field name="confirm_on"/>
+                   
+				</tree>
+			</field>
+		</record>
+
+        <record id="payment_status_search_id" model="ir.ui.view">
+			<field name="name">Payment Status Search</field>
+			<field name="model">bank.deposit.clearance</field>
+            <field name="arch" type="xml">
+                <search string="Payment Status">
+                    <field name="society_id"/>
+                    <field name="school_id"/>
+                    <field name="academic_year_id"/>
+                    <field name="payment_mode"/>
+                    <field name="payment_line_status"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Payment Mode" domain="[]" context="{'group_by':'payment_mode'}"/>
+                        <filter string="status" domain="[]" context="{'group_by':'payment_line_status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_payment_status_id">
+            <field name="name">Fees Management > Bank Reconciliation > Non Cash Deposit Status</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bank.deposit.clearance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids"
+				eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('payment_status_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('bank_payment_status_form')})]" />
+        </record>
+
+    </data>
+</openerp>

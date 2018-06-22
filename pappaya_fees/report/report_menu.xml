@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+    	<report
+            id="pappaya_ledger_report" 
+            model="pappaya.fees.ledger" 
+            string="Fees Ledger"
+            report_type="qweb-pdf"
+            name="pappaya_fees.report_student_fee_ledger" 
+            file="pappaya_fees.report_student_fee_ledger"
+            attachment_use="False"
+            menu="False"
+        />
+
+    </data>
+</openerp>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+		<record model="ir.ui.view" id="class_wise_feereconciliation_report_view">
+			<field name="name">class.wise.feereconciliation.form</field>
+			 <field name="model">class.wise.feereconciliation</field>
+			 <field name="arch" type="xml">
+			 <form string="Fee Reconciliation Report">
+				 <group>
+					 <group>
+						<field name="society_ids" widget="many2many_tags" domain="[('type','=','society')]" options="{'no_open': True,'no_create':True}" />
+						<field name="school_ids" widget="many2many_tags" domain="[('type','=','school')]" options="{'no_open': True,'no_create':True}" />
+						<field name="academic_year_id" class="asterik" options="{'no_open': True,'no_create':True}"/>
+						<newline/>
+						<field name="from_date" invisible="1"/>
+						<field name="to_date" invisible="1"/>
+					 </group>
+					 <group/>
+				 </group>
+				 <footer>
+					<button string="PDF" name="generate_pdf_report" class="oe_highlight" type="object"/>
+					<button name="detail_excel_report" type="object" string="Excel" class="oe_highlight" />
+					<button string="Cancel" special="cancel" />
+				</footer>
+			 </form>
+			 </field>
+		</record>
+
+		<record model="ir.actions.act_window" id="class_wise_feereconciliation_report_act">
+			<field name="name">Fee Reconciliation</field>
+			<field name="res_model">class.wise.feereconciliation</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="class_wise_feereconciliation_report_view" />
+			<field name="target">new</field>
+		</record>
+	
+    </data>
+</odoo>

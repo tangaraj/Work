@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+		 <template id="report_student_fee_ledger">
+			 <t t-call="report.html_container">
+				 <t t-set="data_report_margin_top" t-value="40"/>
+				 <t t-set="data_report_dpi" t-value="90"/>
+				 <t t-foreach="docs" t-as="doc">
+					 <t t-foreach="doc.get_school()" t-as="o">
+						 <div class="header">
+							<div class="row">
+							<div class="col-xs-2" style="text-align:center;">
+								<img t-att-src="'data:image/png;base64,%s' % o['logo']"
+								style="height:110px; max-height: 130px; width: 110px; max-width: 130px; magin-top:23px; margin-left:20px;"/>
+							</div>
+							<div class="col-xs-10">
+								<div style="font-weight:700;font-size:20px; text-align:center;">
+								<t t-if="o['school_id']"> <strong><span t-esc="o['school_id']"/></strong></t>
+								</div>
+								<div style="font-size:14px; text-align:center;">
+								<t t-if="o['street']"> <span t-esc="o['street']"/>,</t>
+								<t t-if="o['street2']"> <span t-esc="o['street2']"/>,</t>
+								<t t-if="o['city']"> <span t-esc="o['city']"/> </t>-
+								<t t-if="o['zip']"> <span t-esc="o['zip']"/></t>
+								</div>
+								<div style="font-size:14px; text-align:center;">
+								<t t-if="o['phone']"> Tel: <span t-esc="o['phone']"/>,</t>
+								<t t-if="o['fax']"> Fax: <span t-esc="o['fax']"/>,</t>
+								<t t-if="o['email']"> Email: <span t-esc="o['email']"/></t>
+								</div>
+								<div style="font-size:13px; text-align:center;">
+								<t t-if="o['website']"> Website: <span t-esc="o['website']"/></t>
+								</div>
+							</div>
+							</div>
+						</div>
+
+						<div class="page">
+							<table class="table table-condensed table-bordered" style="border : 2px solid black;font-size:12px;">
+								<thead>
+									<th colspan="4" style="border : 2px solid black;height:2%;"><center><b>Fee Ledger</b></center></th>
+								</thead>
+								<tbody class="fee_tbody">
+									<tr>
+									<td>STUDENT</td>
+									<td><t t-esc="doc.student_id.name"/></td>
+									<td >SOCIETY</td>
+									<td><span t-esc="doc.society_id.name" /></td>
+									
+									</tr>
+									<tr>
+									<td>STUDENT ID</td>
+									<td><t t-esc="doc.enrollment_number"/></td>
+									<td>Academic Year</td>
+									<td>
+									 <t t-esc="doc.academic_year_id.name"/>
+									</td>
+									
+									 </tr>
+									<tr>
+									<td>SCHOOL</td>
+									<td><t t-esc="doc.school_id.name"/></td>
+									<td>GRADE</td>
+									<td>
+									 <t t-esc="doc.grade_id.name"/>
+									</td>
+									
+									 </tr>
+								</tbody>
+							</table>
+							<table class="table table-condensed table-bordered" style="border : 2px solid black;font-size:12px;">
+								<thead>
+									<th colspan="4" style="border : 2px solid black;"><center><b>Fee Details</b></center></th>
+								</thead>
+								<tr>
+									<td class="text-center"><b>Fee Head</b></td>
+									<td class="text-right"><b>Total Fee</b></td>
+									<td class="text-right"><b>Fee Deposited</b></td>
+									<td class="text-right"><b>Fee Due</b></td>
+								</tr>
+								<tbody class="fee_tbody">
+									<t t-set="sum_credit_total" t-value="0" />
+									<t t-set="sum_debit_total" t-value="0" />
+									<t t-set="sum_balance_total" t-value="0" />
+									<t t-if="doc.fee_ledger_line">
+									<tr t-foreach="doc.fee_ledger_line" t-as="l">
+										<tr>
+										<td><span t-esc="l.name"/></td>
+										<td class="text-right"><span t-esc=" '%.2f' % l.credit"/><t t-set="sum_credit_total" t-value="sum_credit_total+l.credit"/></td>
+										<td class="text-right"><span t-esc=" '%.2f' % l.debit"/><t t-set="sum_debit_total" t-value="sum_debit_total+l.debit"/></td>
+										<td class="text-right"><span t-esc=" '%.2f' % l.balance"/><t t-set="sum_balance_total" t-value="sum_balance_total+l.balance"/></td>
+										</tr>
+									</tr>
+									<tr class="result2">
+										<td class="text-right" colspan="1"><strong>Total</strong></td>
+										<td class="text-right"><t t-esc="'%.2f' % sum_credit_total"/></td>
+										<td class="text-right"><t t-esc=" '%.2f' % sum_debit_total"/></td>
+										<td class="text-right"><t t-esc=" '%.2f' % sum_balance_total"/></td>
+									</tr>
+									</t>
+								</tbody>
+							</table>
+							<table class="table table-condensed table-bordered" style="border : 2px solid black;font-size:12px;">
+								<thead>
+									<th colspan="6" style="border : 2px solid black;"><center><b>Transaction history</b></center></th>
+								</thead>
+								<tr>
+									<td class="text-center"><b>Transaction Date</b></td>
+									<td class="text-center"><b>Receipt No</b></td>
+									<td class="text-center"><b>Fee Head</b></td>
+									<td class="text-right"><b>Amount</b></td>
+									<td class="text-center"><b>Payment Mode</b></td>
+									<td class="text-center"><b>Remarks</b></td>
+								</tr>
+								<tbody class="fee_tbody">
+									<t t-if="doc.fee_receipt_ledger_line">
+									<tr t-foreach="doc.fee_receipt_ledger_line" t-as="l">
+										<td><span t-esc="time.strftime('%d/%b/%Y', time.strptime(l.posting_date,'%Y-%m-%d'))"/></td>
+										<td><span t-esc="l.name"/></td>
+										<td><span t-esc="l.fees_head"/></td>
+										<td class="text-right"><span t-esc=" '%.2f' % l.amount"/></td>
+										<td><span t-esc="l.payment_mode"/></td>
+										<td><span t-esc="l.transaction"/></td>
+									</tr>
+									</t>
+								</tbody>
+							</table>
+							<table class="table table-condensed table-bordered" style="border : 2px solid black;font-size:12px;">
+								<t t-if="doc.fee_refund_ledger_line">
+								<thead>
+									<th colspan="3" style="border : 2px solid black;"><center><b>Fees Refund</b></center></th>
+								</thead>
+								<thead>
+									<th class="text-center"><b>Fees Head </b></th>
+									<th class="text-center"><b>Refund Date </b></th>
+									<th class="text-right"><b>Amount </b></th>
+								</thead>
+								<tbody class="fee_tbody">
+									
+									<tr t-foreach="doc.fee_refund_ledger_line" t-as="l">
+										<td><span t-esc="l.fees_head"/></td>
+										<td><span t-esc="time.strftime('%d/%b/%Y', time.strptime(l.posting_date,'%Y-%m-%d'))"/></td>
+										<td class="text-right"><span t-esc=" '%.2f' % l.amount"/></td>
+									</tr>
+									
+								</tbody>
+								</t>
+							</table>
+							
+							<table class="table table-condensed table-bordered" style="border : 2px solid black;font-size:12px;">
+								<t t-if="doc.fee_cancel_ledger_line">
+								<thead>
+									<th colspan="3" style="border : 2px solid black;"><center><b>Fees Cancelled</b></center></th>
+								</thead>
+								<thead>
+									<th class="text-center"><b>Fees Head </b></th>
+									<th class="text-center"><b>Cancel Date </b></th>
+									<th class="text-right"><b>Amount </b></th>
+								</thead>
+								<tbody class="fee_tbody">
+									
+									<tr t-foreach="doc.fee_cancel_ledger_line" t-as="l">
+										<td><span t-esc="l.fees_head"/></td>
+										<td><span t-esc="time.strftime('%d/%b/%Y', time.strptime(l.posting_date,'%Y-%m-%d'))"/></td>
+										<td class="text-right"><span t-esc=" '%.2f' % l.amount"/></td>
+									</tr>
+									
+								</tbody>
+								</t>
+							</table>
+							
+						</div>
+						<div class="footer">
+							<table>
+								<thead>
+									<tr>
+									<td class="col-xs-6 pull-left" style="font-size:12px;">
+										<strong>Dated On: </strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y %H:%M:%S')"/>
+									</td>
+									<td class="col-xs-3 pull-right" style="font-size:12px;">
+										<strong>Generated By: </strong> <span t-esc="user.name"></span>
+									</td>
+									</tr>
+							   </thead>
+							</table>
+							<div class="text-right" style="font-size:12px;">
+								<ul class="list-inline">
+									<li>Page</li>
+									<li><span class="page"/></li>
+									<li>of</li>
+									<li><span class="topage"/></li>
+								</ul>
+							</div>
+						</div>
+					</t>
+				</t>
+			</t>
+		 </template>
+
+    </data>
+</odoo>

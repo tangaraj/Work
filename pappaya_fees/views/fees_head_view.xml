@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+<!-- Fees Head Form -->
+		<record id="pappaya_fees_head_form" model="ir.ui.view">
+			<field name="name">pappaya.fees.head.form</field>
+			<field name="model">pappaya.fees.head</field>
+			<field name="arch" type="xml">
+				<form string="Fees Head" duplicate="0">
+					<sheet>
+						<group col="4" colspan="2">
+							<field name="name" required="1" class="asterik"/>
+							<field name="is_term_divide" />
+							<field name="partial_payment" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="pappaya_fees_head_tree" model="ir.ui.view">
+			<field name="name">pappaya_fees_head_tree</field>
+			<field name="model">pappaya.fees.head</field>
+			<field name="priority" eval="5" />
+			<field name="arch" type="xml">
+				<tree string="Fees Head">
+					<field name="name" />
+					<field name="is_term_divide" />
+					<field name="partial_payment"/>
+				</tree>
+			</field>
+		</record>
+		
+		
+		<record model="ir.actions.act_window" id="action_pappaya_fees_head_id">
+			<field name="name">Fees Management > Configuration > Fees Head</field>
+			<field name="res_model">pappaya.fees.head</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+<!-- Fees Term Form -->
+		
+		
+		<record id="pappaya_fees_term_form" model="ir.ui.view">
+			<field name="name">pappaya.fees.term.form</field>
+			<field name="model">pappaya.fees.term</field>
+			<field name="arch" type="xml">
+				<form string="Fees Term" duplicate="0">
+					<sheet>
+						<group col="4" colspan="2">
+<!--
+							<field name="name"/>
+							<field name="society_id" options="{'no_open': True,'no_create':True}" domain="[('type','=','society')]"/>
+							<field name="school_id" options="{'no_open': True,'no_create':True}" domain="[('type','=','school'),('parent_id','in',society_ids)]" class="asterik" required="1"/>
+-->
+							<field name="society_ids" widget="many2many_tags" domain="[('type','=','society')]" options="{'no_open': True,'no_create':True}" required="1" class="asterik"/>
+							<field name="school_ids"  widget="many2many_tags" domain="[('type','=','school')]" options="{'no_open': True,'no_create':True}" required="1" class="asterik"/>
+                            <field name="academic_year_id" options="{'no_open': True,'no_create':True}" required="1" class="asterik"/>  
+						    <field name="term_bool" invisible="1"/>
+<!--
+                            <field name="fees_head_id" options="{'no_open': True,'no_create':True}" domain="[('is_term_divide','=', 'True')]"/>  
+-->
+                            <field name="no_of_terms" required="1" class="asterik"/>
+						</group>
+						<notebook colspan="4">
+							<page string="Fees Term">
+							 <button type="object" name="compute_term" string="Compute" class="oe_highlight" colspan="2" attrs="{'invisible':[('term_bool','!=',False)]}"/>
+								<field name="term_divide_ids" nolabel="1" colspan="4">
+									<tree string ="Fees Term" editable="bottom" create="false" delete="false">
+										<field name="term" readonly="1"/>
+										<field name="start_date"/>
+										<field name="end_date"/>
+										<field name="percentage"/>
+									</tree>
+									<form string ="Fees Term">
+										<group col="4" colspan="2">
+											<field name="name" nolabel="1"/>
+											<field name="term" readonly="1"/>
+											<field name="start_date"/>
+											<field name="end_date"/>
+											<field name="percentage"/>
+										</group>
+									</form>
+								</field>
+					    
+                                    <group col="8" colspan="4">
+                                        <field name="total" invisible="1"/>
+                                    </group>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="pappaya_fees_term_tree" model="ir.ui.view">
+			<field name="name">pappaya_fees_term_tree</field>
+			<field name="model">pappaya.fees.term</field>
+			<field name="priority" eval="5" />
+			<field name="arch" type="xml">
+				<tree string="Fees Term">
+<!--
+					<field name="name" />
+-->
+					<field name="society_ids" />
+					<field name="school_ids"/>
+					<field name="academic_year_id"/>
+					<field name="no_of_terms"/>
+				</tree>
+			</field>
+		</record>
+		
+		
+		<record id="pappaya_fees_term_search" model="ir.ui.view">
+            <field name="name">pappaya.fees.term.search</field>
+            <field name="model">pappaya.fees.term</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Fees Term">
+                    <field name="society_ids" />
+		    <field name="school_ids"/>
+		    <field name="academic_year_id"/>
+		    <field name="no_of_terms"/>
+                    <newline />
+					<group expand="0" string="Group By...">
+<!--
+                                                <filter string="Society" domain="[]" context="{'group_by':'society_ids'}" />
+						<filter string="School" domain="[]" context="{'group_by':'school_ids'}" />
+-->
+						<filter string="Academic Year" domain="[]" context="{'group_by':'academic_year_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+		
+		
+		<record model="ir.actions.act_window" id="action_pappaya_fees_term_id">
+			<field name="name"> Fees Management > Configuration > Fees Term</field>
+			<field name="res_model">pappaya.fees.term</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		
+	</data>
+</odoo>

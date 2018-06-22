@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record id="bank_deposit_form" model="ir.ui.view">
+			<field name="name">Bank Deposit Form</field>
+			<field name="model">bank.deposit</field>
+			<field name="arch" type="xml">
+				<form string="Bank Deposit" duplicate="0">
+                    <header>
+                        <button name="action_draft_request" class="oe_highlight" string="Request" type='object' attrs="{'invisible': ['|',('state','not in',['draft'])]}"
+                            groups="pappaya_core.group_pappaya_school_level_officer,pappaya_core.group_pappaya_school_level_fin_admin"/>
+                        <button name="action_request_approve" class="oe_highlight" string="Approve" type='object' attrs="{'invisible': [('state','not in',['requested'])]}"
+                            groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin"/>
+                        <button name="action_request_reject" class="oe_highlight" string="Reject" type='object' attrs="{'invisible': [('state','not in',['requested'])]}"
+                            groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,requested,approved,rejected"/>
+                    </header>
+					<sheet>
+                        <group>
+                            <group col="4">
+                                <field name="society_id" attrs="{'readonly': [('state','in',['approved','requested','rejected'])]}" options="{'no_open': True,'no_create':True}" domain="[('type','=','society')]" required="1" class="asterik"/>
+                                <field name="school_id" attrs="{'readonly': [('state','in',['approved','requested','rejected'])]}" options="{'no_open': True,'no_create':True}" domain="[('type','=','school'),('parent_id','=',society_id)]"  required="1" class="asterik"/>
+                                <field name="academic_year_id" domain="[('school_id', '=', school_id)]"  attrs="{'readonly': [('state','in',['approved','requested','rejected'])]}" options="{'no_open': True,'no_create':True}" required="1" class="asterik"/>
+                                <!-- <field name="payment_mode"/> -->
+                                <field name="deposit_date" attrs="{'readonly': [('state','in',['approved','requested','rejected'])]}" required="1" class="asterik"/>
+                                <field name="approve_date" attrs="{'readonly': [('state','in',['approved'])],'invisible': [('state','not in',['approved'])]}"/>
+                                <field name="bank_id" attrs="{'readonly': [('state','in',['approved','requested','rejected'])]}" options="{'no_open': True,'no_create':True}" invisible="1"/>
+                            </group>
+                        </group>
+
+                        <!--Cash-->
+                        <separator string="Transactions"/>
+                        <field name="cash_receipt_ids" open="false" >
+                            <tree create="false" open="false" editable="bottom" delete="false">
+                                <field name="receipt_date" readonly="1"/>
+                                <field name="name" string="Receipt No" readonly="1"/>
+                                <field name="school_code" readonly="1"/>
+                                <field name="grade_id" options="{'no_open': True,'no_create':True}" readonly="1"/>
+                                <field name="enrollment_number" readonly="1"/>
+                                <field name="student_id" options="{'no_open': True,'no_create':True}" readonly="1"/>
+                                <field name="total" string="Paid Amount"/>
+                            </tree>
+                        </field>
+                        <group >
+                        	<group>
+                        		<field name="is_fiscal_year" attrs="{'invisible': [('is_updated','=',True)]}" groups="pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin"/>
+                        	</group>
+                        	<group/>
+                        </group>
+						<group>
+							<group >
+                                <label for="fiscal_ob" attrs="{'invisible': ['|',('is_updated','=',True),('is_fiscal_year','=',False)]}"/>
+								<div class="btn-inline">
+									<field name="fiscal_ob" attrs="{'invisible': ['|',('is_updated','=',True),('is_fiscal_year','=',False)]}"/>
+									<button name="update_ob" string="Update" type="object" class="btn-primary ml" 
+										confirm="Are you sure to update ? Once it is updated cannot be changed" attrs="{'invisible': ['|',('is_updated','=',True),('is_fiscal_year','=',False)]}"
+                                        groups="pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin"/>
+								</div>
+                            </group>
+                            <group>
+
+                            	<field name="is_updated" invisible="1"/>
+
+                            </group>
+						</group>
+                        <group>
+                            <group>
+                                <field name="opening_bal" class="asterik" readonly="1"/>
+                                <field name="total_cash_amt" readonly="1"/>
+                                <field name="closing_bal" readonly="1"/>
+                                <field name="previous_deposit_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="c_amt_deposit" attrs="{'readonly': [('state','in',['requested','approved','rejected'])]}" class="asterik"/>
+                                <field name="c_bank_id" attrs="{'readonly': [('state','in',['requested','approved','rejected'])],'required':[('state','in',['draft'])]}" options="{'no_open': True,'no_create':True}" class="asterik"/>
+                               <!--  <label for="c_pay_slip" class="asterik"/>
+                                <div>
+                                    <field name="c_pay_slip" widget="many2many_binary" class="oe_inline" string="Upload" attrs="{'readonly': [('state','in',['requested','approved','rejected'])],'required':[('state','in',['draft'])]}"/>
+                                </div> -->
+                                
+                                <field name="c_pay_slip" class="asterik" filename="file_name" attrs="{'readonly': [('state','in',['requested','approved','rejected'])],'required':[('state','in',['draft'])]}"/>
+                                <field name="file_name" invisible="1"/>
+                            </group>
+                        </group>
+					<!-- 	<group class="oe_subtotal_footer oe_right" colspan="2">
+                            <field name="total_amt_deposited" readonly="1"/>
+                            <field name="grand_total" readonly="1" class="oe_subtotal_footer_separator"/>
+                        </group> -->
+                        <group>
+                            <field name="remarks" attrs="{'required':[('state','in',['rejected'])]}"/>
+                            <field name="cancel_remarks" attrs="{'invisible':[('cancel_remarks','=',False)]}"/>
+			            </group>
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+        <record id="bank_deposit_tree" model="ir.ui.view">
+			<field name="name">Bank Deposit Tree</field>
+			<field name="model">bank.deposit</field>
+			<field name="arch" type="xml">
+				<tree string="Bank Deposit" default_order='deposit_date desc,id desc'>
+					<field name="deposit_date"/>
+                    <field name="society_id" groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_state_level_it_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_national_level_it_admin"/>
+				    <field name="school_id" groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_state_level_it_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_national_level_it_admin"/>
+                    <field name="academic_year_id" groups="pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_national_level_it_admin"/>
+                    <field name="bank_id"/>
+                    <field name="opening_bal"/>
+                    <field name="total_cash_amt"/>
+                    <field name="c_amt_deposit"/>
+                    <field name="closing_bal"/>
+                    <field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+        <record id="bank_deposit_search" model="ir.ui.view">
+			<field name="name">Bank Deposit Search</field>
+			<field name="model">bank.deposit</field>
+            <field name="arch" type="xml">
+                <search string="Bank Deposit">
+                    <field name="society_id"/>
+                    <field name="school_id"/>
+                    <field name="academic_year_id"/>
+                    <field name="bank_id"/>
+					<group expand="0" string="Group By...">
+						<filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_bank_deposits">
+            <field name="name">Fees Management > Bank Reconciliation > Cash Deposit</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bank.deposit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids"
+				eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('bank_deposit_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('bank_deposit_form')})]" />
+        </record>
+        
+        
+        
+        <record id="bank_deposit_tree_state_level" model="ir.ui.view">
+			<field name="name">Bank Deposit Tree</field>
+			<field name="model">bank.deposit</field>
+			<field name="arch" type="xml">
+				<tree string="Bank Deposit" default_order='deposit_date desc,id desc' open="false" create="false">
+					<field name="deposit_date"/>
+                    <field name="society_id" groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_state_level_it_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_national_level_it_admin"/>
+				    <field name="school_id" groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_state_level_it_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_national_level_it_admin"/>
+                    <field name="academic_year_id" groups="pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_national_level_it_admin"/>
+                    <field name="bank_id"/>
+                    <field name="opening_bal" invisible="1"/>
+                    <field name="total_cash_amt" invisible="1"/>
+                    <field name="c_amt_deposit" />
+                    <field name="closing_bal" invisible="1"/>
+                    <field name="state"/>
+                    <field name="c_pay_slip" filename="file_name" />
+                    <field name="file_name" invisible="1"/>
+                    
+                    <button name="action_request_approve" class="oe_highlight" string="Approve" type='object' attrs="{'invisible': [('state','not in',['requested'])]}"
+                            groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin"/>
+                    <button name="action_request_reject" class="oe_highlight" string="Reject" type='object' attrs="{'invisible': [('state','not in',['requested'])]}"
+                        groups="pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record id="bank_deposit_form_state_level" model="ir.ui.view">
+			<field name="name">Bank Deposit Form</field>
+			<field name="model">bank.deposit</field>
+			<field name="arch" type="xml">
+				<form string="Bank Deposit" open="false" duplicate="0">
+                   <sheet>
+                       <group>
+                            <group>
+                                <field name="c_pay_slip" class="asterik" filename="file_name" />
+                                <field name="file_name" invisible="1"/>
+                            </group>
+                        </group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+        
+         <record model="ir.actions.act_window" id="action_bank_deposits_state_level">
+            <field name="name">Fees Management > Bank Reconciliation > Cash Deposit</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="sequence" eval="10" />
+            <field name="res_model">bank.deposit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_ids"
+				eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('bank_deposit_tree_state_level')})]" />
+        </record>
+
+    </data>
+</openerp>

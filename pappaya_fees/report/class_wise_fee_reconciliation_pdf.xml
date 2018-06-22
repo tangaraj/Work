@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+		<template id="class_wise_feereconciliation_pdf_report">
+			<t t-call="report.html_container">
+				<t t-set="data_report_margin_top" t-value="40"/>
+				<t t-set="data_report_dpi" t-value="90"/>
+				<t t-foreach="docs" t-as="o">
+					<t t-foreach="o.get_school_header()" t-as="l">
+                        <div class="header">
+                            <div class="row">
+                                <div class="col-xs-2" style="text-align:center;">
+                                    <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' % res_company.logo" style="height:110px;max-height:130px;width:110px;max-width:130px;margin-left:20px;"/>
+                                </div>
+                                <div class="col-xs-10">
+                                    <div style="font-weight:700;font-size:20px; text-align:center;">
+                                        <t t-if="l['school_id']"> <strong><span t-esc="l['school_id']"/></strong></t>
+                                    </div>
+                                    <div style="font-size:15px; text-align:center;">
+                                        <t t-if="l['street']"> <span t-esc="l['street']"/>,</t>
+                                        <t t-if="l['street2']"> <span t-esc="l['street2']"/>,</t>
+                                        <t t-if="l['city']"> <span t-esc="l['city']"/> </t>-
+                                        <t t-if="l['zip']"> <span t-esc="l['zip']"/></t>
+                                    </div>
+                                    <div style="font-size:15px; text-align:center;">
+                                        <t t-if="l['phone']"> Tel: <span t-esc="l['phone']"/>,</t>
+                                        <t t-if="l['fax']"> Fax: <span t-esc="l['fax']"/>,</t>
+                                        <t t-if="l['email']"> Email: <span t-esc="l['email']"/></t>
+                                    </div>
+                                    <div style="font-size:14px; text-align:center;">
+                                        <t t-if="l['website']"> Website: <span t-esc="l['website']"/></t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-foreach="o.get_society_header()" t-as="soc">
+                        <div class="header">
+                            <div class="row">
+                                <div class="col-xs-2" style="text-align:center;">
+                                    <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' % res_company.logo" style="height:110px;max-height:130px;width:110px;max-width:130px;margin-left:20px;"/>
+                                </div>
+                                <div class="col-xs-10">
+                                    <br/><br/>
+                                    <div style="font-weight:600;font-size:22px;text-align:center;">
+                                        <t t-if="soc['society_id']"> <strong><span t-esc="soc['society_id']"/></strong></t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+					<div class="page">
+						<style>
+							.row1 {
+								text-align:center;
+								font-size:18px;
+								border-top:1px solid black;
+								padding-top:10px;
+								padding-bottom:30px
+								}
+							.row2 {
+								text-align:left;
+								font-size:16px;
+								padding-bottom:5px
+								}
+							.table-condensed {
+								width:100%;
+								border:1px solid black;
+								font-size:16px;
+								}
+							.result1 td {
+								text-align:center;
+								vertical-align:middle;
+								border-right:1px solid black;
+								border-bottom:1px solid black;
+								}
+							.result2 td {
+								text-align:right;
+								vertical-align:middle;
+								border-right:1px solid black;
+								border-bottom:1px solid black;
+								}
+							   .DIS_watermark_report{
+								background:url('/theme_pappaya/static/src/img/logo_dis.png') no-repeat center center; position:fixed; width:100%; height:100%; pointer-events: none; opacity:0.15; z-index:9999}
+								}
+						</style>
+						<!--<div class="DIS_watermark_report"/>-->
+						<div class="row1">
+							<strong>Fee Reconciliation Report</strong><br/>
+							<strong>as on : <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/> </strong>
+						</div>
+
+						<div>
+							<table class="table-condensed">
+								<tbody>
+									<t t-foreach="o.get_data()" t-as="l">
+										<t t-foreach="l['school_s']" t-as="s">
+											<tr style="border: 1px solid black;">
+												<td colspan="11" class="text-center"><strong><span t-esc="s['school_name']"/></strong></td>
+											</tr>
+											<thead>
+											<tr class="result1">
+												<td><strong>Class</strong></td>
+												<td><strong>Student Count</strong></td>
+												<td><strong>Open. DR</strong></td>
+												<td><strong>Open. CR</strong></td>
+												<td><strong>Charge</strong></td>
+												<td><strong>Concession</strong></td>
+												<td><strong>Collection</strong></td>
+												<td><strong>Adj. DR</strong></td>
+												<td><strong>Adj. CR</strong></td>
+												<td><strong>Close. DR</strong></td>
+												<td><strong>Close CR</strong></td>
+											</tr>
+											</thead>
+											<t t-foreach="s['class_s']" t-as="c">
+												<tr style="border: 1px solid black;">
+													<td style="border: 1px solid black;" class="text-left"><span t-esc="c['class_name']"/></td>
+													<td style="border: 1px solid black;" class="text-center"><span t-esc="c['stu_count']"/></td>
+													<td style="border: 1px solid black;" class="text-right"><span t-esc="c['open_dr']"/></td>
+													<td style="border: 1px solid black;" class="text-right"><span t-esc="c['open_cr']"/></td>
+													<td style="border: 1px solid black;" class="text-right"><span t-esc="c['charge']"/></td>
+													<td style="border: 1px solid black;" class="text-right"><span t-esc="c['concession']"/></td>
+													<td style="border: 1px solid black;" class="text-right"><span t-esc="c['collection']"/></td>
+													<td style="border: 1px solid black;" class="text-right"><span t-esc="c['adj_dr']"/></td>
+													<td style="border: 1px solid black;" class="text-right"><span t-esc="c['adj_cr']"/></td>
+													<td style="border: 1px solid black;" class="text-right"><span t-esc="c['close_dr']"/></td>
+													<td style="border: 1px solid black;" class="text-right"><span t-esc="c['close_cr']"/></td>
+												</tr>
+											</t>
+											<tr style="border: 1px solid black;">
+												<td class="text-center"><strong>Total</strong></td>
+												<td class="text-center"><strong><span t-esc="s['total_stu_count']"/></strong></td>
+												<td class="text-right"><strong><span t-esc="s['total_open_dr']"/></strong></td>
+												<td class="text-right"><strong><span t-esc="s['total_open_cr']"/></strong></td>
+												<td class="text-right"><strong><span t-esc="s['total_charge']"/></strong></td>
+												<td class="text-right"><strong><span t-esc="s['total_concession']"/></strong></td>
+												<td class="text-right"><strong><span t-esc="s['total_collection']"/></strong></td>
+												<td class="text-right"><strong><span t-esc="s['total_adj_dr']"/></strong></td>
+												<td class="text-right"><strong><span t-esc="s['total_adj_cr']"/></strong></td>
+												<td class="text-right"><strong><span t-esc="s['total_close_dr']"/></strong></td>
+												<td class="text-right"><strong><span t-esc="s['total_close_cr']"/></strong></td>
+
+											</tr>
+										</t>
+									</t>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="footer">
+						<table>
+							<thead>
+								<tr>
+									<td class="col-xs-5 pull-left" style="font-size:16px;">
+										<strong>Dated On: </strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y %H:%M:%S')"/>
+									</td>
+									<td class="col-xs-2 pull-right" style="font-size:16px;">
+										<strong>Generated By: </strong> <span t-esc="user.name"/>
+									</td>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</t>
+			</t>
+        </template>
+	
+		<report
+            id="print_class_wise_feereconciliation_details"
+            model="class.wise.feereconciliation"
+            string="Fee Reconciliation Report"
+            report_type="qweb-pdf"
+            name="pappaya_fees.class_wise_feereconciliation_pdf_report"
+            file="pappaya_fees.class_wise_feereconciliation_pdf_report"
+            attachment_use="False"
+        />
+        
+		<record id="print_class_wise_feereconciliation_details" model="ir.actions.report.xml">
+			<field name="paperformat_id" ref="paperformat_euro_landscape_fees"/>
+		</record>
+
+    </data>
+</odoo>
+
+

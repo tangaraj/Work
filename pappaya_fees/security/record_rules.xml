@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<record model="ir.rule" id="pappaya_fees_collection_rule">
+	   		<field name="name">Fees Collection</field>
+	        <field name="model_id" ref="model_pappaya_fees_collection"/>
+	        <field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_id','=',user.company_id.id),('school_id','in', user.company_ids.ids)]</field>
+	   	</record>
+
+		<record model="ir.rule" id="pappaya_fees_receipt_rule">
+	   		<field name="name">Fees Receipt</field>
+	        <field name="model_id" ref="model_pappaya_fees_receipt"/>
+	        <field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_id','=',user.company_id.id),('school_id','in', user.company_ids.ids)]</field>
+	   	</record>
+
+		<record model="ir.rule" id="pappaya_fees_ledger_rule">
+	   		<field name="name">Fees Ledger</field>
+	        <field name="model_id" ref="model_pappaya_fees_ledger"/>
+	        <field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_id','=',user.company_id.id),('school_id','in', user.company_ids.ids)]</field>
+	   	</record>
+
+		<record model="ir.rule" id="pappaya_fees_structure_rule">
+	   		<field name="name">Fees Structure</field>
+	        <field name="model_id" ref="model_pappaya_fees_structure"/>
+	        <field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_ids','in',user.company_id.id),('school_ids','in', user.company_ids.ids)]</field>
+	   	</record>
+
+		<record model="ir.rule" id="pappaya_fees_concession_rule">
+	   		<field name="name">Fees Concession</field>
+	        <field name="model_id" ref="model_pappaya_fees_concession"/>
+	        <field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_id','=',user.company_id.id),('school_id','in', user.company_ids.ids)]</field>
+	   	</record>
+
+		<record model="ir.rule" id="pappaya_fees_term_rule">
+	   		<field name="name">Fees Term</field>
+	        <field name="model_id" ref="model_pappaya_fees_term"/>
+	        <field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_ids','in',user.company_id.id),('school_ids','in', user.company_ids.ids)]</field>
+	   	</record>
+	   
+	   
+	   <record model="ir.rule" id="pappaya_fees_collect_refund_rule">
+	   		<field name="name">Fees Collect Refund</field>
+	        <field name="model_id" ref="model_fees_collect_refund"/>
+	        <field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_id','=',user.company_id.id),('school_id','in', user.company_ids.ids)]</field>
+	   	</record>
+	   
+	   
+	   <record model="ir.rule" id="pappaya_fees_refund_receipt_rule">
+	   		<field name="name">Fees Refund Receipt</field>
+	        <field name="model_id" ref="model_pappaya_fees_refund"/>
+	        <field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_id','=',user.company_id.id),('school_id','in', user.company_ids.ids)]</field>
+	   	</record>
+	   
+		<record model="ir.rule" id="model_pappaya_concession_type_rule">
+	   		<field name="name">Pappaya concession type</field>
+	        <field name="model_id" ref="model_pappaya_concession_type"/>
+	       	<field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_ids','in',user.company_id.id),('school_ids','in', user.company_ids.ids)]</field>
+	   	</record>
+	   	
+	   	<record model="ir.rule" id="model_pappaya_rte_reimbursment_rule">
+	   		<field name="name">Pappaya Rte Reimbursment</field>
+	        <field name="model_id" ref="model_pappaya_rte_reimbursment"/>
+	       	<field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_id','=',user.company_id.id),('school_id','in', user.company_ids.ids)]</field>
+	   	</record>
+
+		<record model="ir.rule" id="model_bank_deposit_clearance_rule">
+	   		<field name="name">Bank Deposit Clearance</field>
+	        <field name="model_id" ref="model_bank_deposit_clearance"/>
+	       	<field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_id','=',user.company_id.id),('school_id','in', user.company_ids.ids)]</field>
+	   	</record>
+
+		<record model="ir.rule" id="model_bank_deposit_rule">
+	   		<field name="name">Bank Deposit</field>
+	        <field name="model_id" ref="model_bank_deposit"/>
+	       	<field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_id','=',user.company_id.id),('school_id','in', user.company_ids.ids)]</field>
+	   	</record>
+
+		<record model="ir.rule" id="model_bank_account_config_rule">
+	   		<field name="name">Bank Account Config</field>
+	        <field name="model_id" ref="model_bank_account_config"/>
+	       	<field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_ids','in',user.company_id.id),('school_ids','in', user.company_ids.ids)]</field>
+	   	</record>
+
+		<record model="ir.rule" id="model_pappaya_pos_structure_rule">
+	   		<field name="name">Pappaya PoS Structure</field>
+	        <field name="model_id" ref="model_pappaya_pos_structure"/>
+	       	<field name="global" eval="True"/>
+            <field name="domain_force">['|',('school_ids','in',user.company_id.id),('school_ids','in', user.company_ids.ids)]</field>
+	   	</record>
+
+
+    </data>
+</openerp>

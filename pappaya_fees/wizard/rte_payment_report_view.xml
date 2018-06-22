@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+		<record model="ir.ui.view" id="rte_payment_report_view">
+			<field name="name">rte.payment.report.form</field>
+			<field name="model">rte.payment.report</field>
+			<field name="arch" type="xml">
+				<form string="RTE Payment Report">
+					 <group>
+						 <group>
+							 <field name="society_ids" widget="many2many_tags" required="1" class="asterik" domain="[('type','=','society')]" options="{'no_open': True,'no_create':True}" />
+							 <field name="school_ids" widget="many2many_tags" required="1" class="asterik" domain="[('type','=','school'),('parent_id','in', society_ids)]" options="{'no_open': True,'no_create':True}" />
+							 <field name="academic_year_id" options="{'no_open': True,'no_create':True}" domain="[('school_id','in', school_ids)]" required="1" class="asterik"/>
+							 <field name="from_date" class="asterik"/>
+							 <field name="to_date" class="asterik"/>
+						 </group>
+						 <group/>
+						 </group>
+					 <footer>
+						 <!-- <button string="PDF" name="generate_pdf_report" class="oe_highlight" type="object"/> -->
+						 <button name="generate_receipt_excel_report" type="object" string="Excel" class="oe_highlight" />
+						 <button string="Cancel" special="cancel" />
+					</footer>
+			 	</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="rte_payment_report_act">
+            <field name="name">RTE Payment Report</field>
+            <field name="res_model">rte.payment.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="rte_payment_report_view" />
+            <field name="target">new</field>
+        </record>
+	
+    </data>
+</openerp>

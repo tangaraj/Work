@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="pappaya_employee_promotion_tree_view" model="ir.ui.view">
+		<field name="name">pappaya.employee.promotion.tree</field>
+		<field name="model">pappaya.employee.promotion</field>
+		<field name="arch" type="xml">
+			<tree string="Employee Promotion/Transfer">
+				<field name="employee_name" />
+				<field name="department_id" />
+				<field name="to_department_id" />
+				<field name="designation_id" />
+				<field name="to_designation_id" />
+				
+			</tree>
+		</field>
+		</record>
+
+
+		<record id="pappaya_hr_employee_form_view_id" model="ir.ui.view">
+			<field name="name">pappaya.employee.promotion.form</field>
+			<field name="model">pappaya.employee.promotion</field>
+			<field name="arch" type="xml">
+				<form string="Employee Promotion/Transfer">
+					<header>
+                        <button name="request_in_progress" string="Request" states="draft" type="object" class="oe_highlight" />
+                        <button name="act_approve" string="Approve" states="requested" type="object" class="oe_highlight" />
+                        <button name="act_reject" string="Reject" states="requested" type="object" class="oe_highlight" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,requested,approved"/>
+                        </header>
+					<sheet>
+
+						<group col="4">
+							<field name="employee_name" options="{'no_open': True,'no_create':True}" attrs="{'readonly':[('state','!=','draft')]}"/>
+							<field name="date"/>
+							<field name="department_id" options="{'no_open': True,'no_create':True}" attrs="{'readonly':[('state','!=','draft')]}"/>
+							
+							<field name="to_department_id" options="{'no_open': True,'no_create':True}" attrs="{'readonly':[('state','!=','draft')]}"/>
+							<field name="designation_id" options="{'no_open': True,'no_create':True}" attrs="{'readonly':[('state','!=','draft')]}"/>
+							<field name="to_designation_id" options="{'no_open': True,'no_create':True}" attrs="{'readonly':[('state','!=','draft')]}"/>
+							<field name="change_type" attrs="{'readonly':[('state','!=','draft')]}"/>
+							
+						</group>
+
+						<group name="promotion" string="History">
+							<field name="promotion_history_ids" nolabel="1">
+								<tree create="false" delete="false" >
+									<field name="date" />
+									<field name="change_type"/>
+									<field name="department_id" options="{'no_open': True,'no_create':True}"/>
+									<field name="designation_id" options="{'no_open': True,'no_create':True}"/>
+									<field name="to_department_id" options="{'no_open': True,'no_create':True}"/>
+									<field name="to_designation_id" options="{'no_open': True,'no_create':True}"/>
+									<field name="user_id"/>
+									<field name="updated_on"/>
+									<field name="status"/>
+								</tree>
+							</field>
+						</group>
+						<group name="description" string="Description" >
+						<field name="description" nolabel="1" attrs="{'required':[('change_type','=','transfer')]}"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="action_pappaya_hr_employee_promotion" model="ir.actions.act_window">
+			<field name="name">Employee Promotion/Transfer</field>
+			<field name="res_model">pappaya.employee.promotion</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+	<record id="view_employee_form" model="ir.ui.view">
+		<field name="name">hr.employee.inherit.form</field>
+		<field name="model">hr.employee</field>
+		<field name="inherit_id" ref="hr.view_employee_form" />
+		<field name="priority" eval="8" />
+		<field name="arch" type="xml">
+			<xpath expr="//notebook[last()]" position="inside">
+				<page string="Promotion/Transfer">
+					<group>
+						<field name="employee_history_ids" nolabel="1">
+							<tree string="Employee Promotion" edit="false"
+								delete="false">
+								<field name="date" />
+								<field name="department_id"
+									options="{'no_open': True,'no_create':True}" />
+								<field name="designation_id"
+									options="{'no_open': True,'no_create':True}" />
+								<field name="to_department_id"
+									options="{'no_open': True,'no_create':True}" />
+								<field name="to_designation_id"
+									options="{'no_open': True,'no_create':True}" />
+								<field name="user_id" />
+								<field name="updated_on" />
+								<field name="status" />
+							</tree>
+						</field>
+					</group>
+				</page>
+			</xpath>
+		</field>
+	</record>
+
+
+		<menuitem id="menu_hr_promotion" action="action_pappaya_hr_employee_promotion" parent="hr.menu_hr_root" name="Employee Promotion" sequence="10"/>
+
+	</data>
+</openerp>

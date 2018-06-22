@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+		<record  id="view_bank_ledger_school_wise_form" model="ir.ui.view">
+			<field name="name">Cash Book Form</field>
+			<field name="model">bank.ledger.school.wise</field>
+			<field name="arch" type="xml">
+				<form string="Cash Book">
+					 <group col="4" colspan="4" >
+                         <field name="society_ids" widget="many2many_tags"  options="{'no_open': True,'no_create':True}" domain="[('type','=','society')]" required="1" class="asterik"/>
+                         <!-- <field name="school_ids" widget="many2many_tags" options="{'no_open': True,'no_create':True}" domain="[('type','=','school')]" required="1" class="asterik"/> -->
+                         <newline/>
+                         <field name="academic_year_id" options="{'no_open': True,'no_create':True}" required="1" class="asterik"/>
+                         <newline/>
+                         <field name="bank_account_id" options="{'no_open': True,'no_create':True}" required="1" class="asterik"/>
+                         <!-- <field name="from_date" required="1" class="asterik"/>
+                         <field name="to_date" required="1" class="asterik"/> -->
+                     </group>
+					 <footer>
+						 <button name="bank_ledger_school_wise_detail_excel_report" type="object" string="Excel" class="oe_highlight"/>
+						 <button string="Cancel" special="cancel" />
+					</footer>
+			 	</form>
+			</field>
+		</record>
+
+		<record  id="action_bank_ledger_school_wise" model="ir.actions.act_window">
+            <field name="name">Cash Book School Wise</field>
+            <field name="res_model">bank.ledger.school.wise</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_bank_ledger_school_wise_form"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

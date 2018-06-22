@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<template id="dis_fee_layout">
+         <!-- Multicompany -->
+            <t t-if="not o and doc">
+                <t t-set="o" t-value="doc"/>
+            </t>
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"/>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+            <t t-raw="0" />
+        </template>
+
+		<!--Original-->
+        <template id="report_original_fee_receipt">
+            <t t-call="report.html_container">
+			<t t-set="data_report_dpi" t-value="110"/>
+				<div style ="width:50%">
+			       	<t t-foreach="docs" t-as="doc">
+						<t t-call="pappaya_fees.dis_fee_layout">
+							<div class="page">
+								<!--Header-->
+								<t t-foreach="doc.get_school()" t-as="o">
+									<table style="width:100%;">
+										<tr style="width:100%;">
+											<t t-foreach="[1]" t-as="record111">
+												<td style="width:50%;">
+													<div class="row">
+														<div class="col-xs-2"/>
+														<div class="col-xs-9" style="text-align:right;font-size:15px;">
+															<t t-if="doc.state != 'cancel'" >
+																<span t-if="doc.payment_mode == 'cash' or doc.payment_mode == 'card' "><strong>Office Copy</strong></span>
+																<span t-if="doc.payment_mode == 'cheque/dd' or doc.payment_mode == 'dd'or doc.payment_mode == 'neft/rtgs'"><strong>Temporary Receipt - Office Copy</strong></span>
+															</t>
+															<t t-if="doc.state == 'cancel'" >
+																<span t-if="doc.payment_mode == 'cash' or doc.payment_mode == 'card' "><strong>Cancelled Receipt - Office Copy</strong></span>
+																<span t-if="doc.payment_mode == 'cheque/dd' or doc.payment_mode == 'dd'or doc.payment_mode == 'neft/rtgs'"><strong>Cancelled Receipt - Office Copy</strong></span>
+															</t>
+														</div>
+													</div>
+												</td>
+											</t>
+											<t t-foreach="[2]" t-as="record111">
+												<td style="width:50%;">
+												<div class="row">
+													<div class="col-xs-2"/>
+													<div class="col-xs-9" style="text-align:right;font-size:15px;">
+													<t t-if="doc.state != 'cancel'" >
+														<span t-if="doc.payment_mode == 'cash' or doc.payment_mode == 'card'"><strong>Student Copy</strong></span>
+														<span t-if="doc.payment_mode == 'cheque/dd' or doc.payment_mode == 'dd' or doc.payment_mode == 'neft/rtgs'"><strong>Temporary Receipt - Student Copy</strong></span>
+													</t>
+													<t t-if="doc.state == 'cancel'" >
+														<span t-if="doc.payment_mode == 'cash' or doc.payment_mode == 'card'"><strong>Cancelled Receipt - Student Copy</strong></span>
+														<span t-if="doc.payment_mode == 'cheque/dd' or doc.payment_mode == 'dd' or doc.payment_mode == 'neft/rtgs'"><strong>Cancelled Receipt - Student Copy</strong></span>
+													</t>	
+													</div>
+												</div>
+												</td>
+											</t>
+										</tr>
+									</table>
+									<table style="width:100%;">
+										<tr style="width:100%;">
+											<t t-foreach="[1,2]" t-as="record111">
+												<td style="width:50%;">
+													<div class="row">
+														<div class="col-xs-2">
+															<img t-att-src="'data:image/png;base64,%s' % o['logo']"
+															style="height:80px; max-height:90px; width:80px; max-width:90px; margin-left:20px;"/>
+														</div>
+														<div class="col-xs-9">
+															<div style="font-weight:500;font-size:15px; text-align:center;">
+																<t t-if="o['school_id']"> <strong><span t-esc="o['school_id']"/></strong></t>
+															</div>
+															<div style="font-size:10px; text-align:center;">
+																<t t-if="o['street']"> <span t-esc="o['street']"/>,</t>
+																<t t-if="o['street2']"> <span t-esc="o['street2']"/></t>,
+																<t t-if="o['city']"> <span t-esc="o['city']"/> </t>-
+																<t t-if="o['zip']"> <span t-esc="o['zip']"/></t>
+															</div>
+															<div style="font-size:10px; text-align:center;">
+																<t t-if="o['phone']"> Tel: <span t-esc="o['phone']"/>,</t>
+																<t t-if="o['fax']"> Fax: <span t-esc="o['fax']"/></t> <br/>
+																<t t-if="o['email']"> Email: <span t-esc="o['email']"/></t>
+															</div>
+															<div style="font-size:10px; text-align:center;">
+																<t t-if="o['website']"><span t-esc="o['website']"/></t>
+															</div>
+														</div>
+													</div>
+												</td>
+											</t>
+										</tr>
+									</table>
+								</t>
+								<br/>
+								<!--Content-->
+								<table style="width:100%;">
+									<tr style="width:100%;">
+										<t t-foreach="[1,2]" t-as="record111">
+											<td style="width:45%;">
+												<table class="table table-condensed table-bordered" style="border:1px solid black;font-size:10px;">
+													<thead>
+														<th colspan="6" style="border:1px solid black;"><center><b>Receipt</b></center></th>
+													</thead>
+													<tbody class="fee_tbody">
+														<tr>
+															<td>STUDENT ID</td>
+															<td>:</td>
+															<td><t t-esc="doc.enrollment_number"/></td>
+															<td>RECEIPT NO</td>
+															<td>:</td>
+															<td><span t-esc="doc.name"/></td>
+														</tr>
+														<tr>
+															<td>STUDENT NAME</td>
+															<td>:</td>
+															<td><t t-esc="doc.student_id.full_name"/></td>
+															<td>DATE</td>
+															<td>:</td>
+															<td>
+																<t t-if="doc.receipt_date">
+																<span t-esc="time.strftime('%d/%b/%Y', time.strptime(doc.receipt_date,'%Y-%m-%d'))" />
+																</t>
+															</td>
+														</tr>
+															<tr>
+															<td>PARENT NAME</td>
+															<td>:</td>
+															<td><t t-esc="doc.student_id.father_name"/></td>
+															<td>GRADE</td>
+															<td>:</td>
+															<td><t t-esc="doc.grade_id.name"/></td>
+														</tr>
+													</tbody>
+												</table>
+												<table class="table table-condensed table-bordered" style="border:1px solid black;font-size:10px;">
+													<thead>
+														<th colspan="4" style="border:1px solid black;"><center><b>Payment Details</b></center></th>
+													</thead>
+													<tr>
+														<td><b>Name</b></td>
+														<td><b>Charged Date</b></td>
+														<td style="text-align:right;"><b>Amount</b></td>
+														<!-- <td><b>Concession</b></td> -->
+													</tr>
+													<tbody class="fee_tbody">
+														<t t-if="doc.fees_receipt_line">
+															<t t-foreach="doc.fees_receipt_line" t-as="ln">
+																<tr>
+																	<td><span t-esc="ln.name"/></td>
+																	<td><span t-esc="time.strftime('%d/%b/%Y', time.strptime(ln.receipt_id.receipt_date,'%Y-%m-%d'))"/></td>
+																	<td style="text-align:right;"><span t-esc=" '%.2f' % ln.amount"/></td>
+																	<!-- <td><span t-esc=" '%.2f' % ln.concession_amount"/></td> -->
+																</tr>
+															</t>
+														 </t>
+													</tbody>
+													<tr>
+														<td/>
+														<td style="text-align:right;"><b>Total:</b></td>
+														<td style="text-align:right;"><b><span t-esc=" '%.2f' % doc.total"/></b></td>
+														<!-- <td/> -->
+													</tr>
+												</table>
+												
+												
+												
+												<table style="font-size:9px;">
+													<tr>
+														<td><strong>In words</strong></td>
+														<td> <strong>: </strong></td>
+														<td><span t-esc="doc.amount_to_text_in(doc.total,doc.school_id.currency_id)"/></td>
+													</tr>
+													<tr>
+													    <td><strong>Mode Of Payment</strong></td>
+													    <td><strong> : </strong></td>
+														<td><span t-esc="doc.get_value_duplicate()"/></td>
+													</tr>
+													<tr>
+													    <td><strong>CHQ/DD/POS/Ref.No</strong></td>
+													    <td><strong> : </strong></td>
+													    <td><span t-esc="doc.cheque_dd"/></td>
+													</tr>
+												</table>
+												
+												
+	
+												
+												<div  class="row">
+														<div class="col-xs-9 pull-left">
+															<t t-if="doc.fee_collection_id.bulk_term_state == 'due'">
+																<table class="table table-condensed table-bordered" style="font-size:9px;">
+																	<thead>
+																		<th colspan="3" style="border:1px solid black;"><center><b>Fee Dues Particulars</b></center></th>
+																	</thead>
+																	<tr>
+																		<td ><b>Fee Type</b></td>
+																		<td style="text-align:right;"><b>Amount Due</b></td>
+																		<td ><b>Due Date</b></td>
+																		
+																	</tr>
+																	<tbody >
+																		<t t-foreach="doc.next_due_date_and_payment_details()" t-as="ln">
+																			<tr >
+																				<td ><span t-esc="ln['fee_type']"/></td>
+																				<td style="text-align:right;"><span t-esc=" '%.2f' % ln['due_amount']"/></td>
+																				<td ><span t-esc="ln['due_date']"/></td>
+																			</tr>
+																		</t>
+																	</tbody>
+																	
+																</table>
+															</t>		
+														</div>
+														<div class="col-xs-3 pull-right">
+																<img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', ('Receipt No' + ' : ' + str(doc.name) + '\n' +
+																																							'Student No' + ' : ' + str(doc.enrollment_number) + '\n' +
+																																							'Student Name' + ' : ' + str(doc.student_id.name) + '\n' +
+																																							'Class' + ' : ' + str(doc.grade_id.name) + '\n' +
+																																							'Parent Name' + ' : ' + str(doc.student_id.father_name or '') + '\n' +
+																																							'Paid Date' + ' : ' + str(time.strftime('%d/%b/%Y', time.strptime(doc.receipt_date,'%Y-%m-%d'))) + '\n' + '\n' +
+																																							'Total Payment' + ' : ' + str(doc.total)), 300, 100)" style="width:100px;height:100px"/>
+														</div>
+													
+												</div>
+												<p>
+													<h5><strong style="font-size:9px;">*Fee Once Paid neither refundable nor transferable</strong></h5>
+													<t t-if="doc.payment_mode in ['cheque/dd']">
+														<h4 style="font-size:9px;"><left>payment by Cheque(s) are subject to realization.</left></h4>
+													</t>
+													<t t-if="doc.payment_mode in ['dd']">
+														<h4 style="font-size:9px;"><left>payment by Demand Draft(s) are subject to realization.</left></h4>
+													</t>
+													<t t-if="doc.payment_mode in ['neft/rtgs']">
+														<h4 style="font-size:9px;"><left>payment by NEFT/RTGS are subject to realization.</left></h4>
+													</t>
+													
+													<t t-if="doc.payment_mode in ['cheque/dd']">
+														<h4 style="font-size:9px;"><left>Cheque(s) to be drawn in favor of <span t-esc="doc.society_id.name"/></left></h4>
+													</t>
+													<t t-if="doc.payment_mode in ['dd']">
+														<h4 style="font-size:9px;"><left>Demand Draft(s) to be drawn in favor of <span t-esc="doc.society_id.name"/></left></h4>
+													</t>
+													<h4 style="font-size:9px;"><center>Thank you for choosing <span t-esc="doc.school_id.name"/></center></h4>
+													<h4 style="font-size:9px;"><center>We value your patronage</center></h4>
+												</p>
+												
+											</td>
+											<td>
+												<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>
+											</td>
+										</t>
+									</tr>
+								</table>
+							</div>
+							<!--Footer-->
+							<div class="footer">
+								<table style="width:100%;">
+									<tr>
+										<t t-foreach="[1,2]" t-as="record111">
+											<td style="width:45%;">
+												<div style="text-align:left;">
+													<div style="font-size:10px;margin-bottom:10px">
+														<strong>This is system generated receipt does not required seal &amp; sign.</strong><br/>
+														<strong>For any queries, contact 18004199678</strong>
+														<table>
+															<thead>
+																<tr>
+																	<td style="text-align:left;font-size:9px;">
+																		<strong>Dated On: </strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y %H:%M:%S')"/>
+																	</td>
+																	<td>
+																		<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>
+																	</td>
+																	<td>
+																		<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>
+																	</td>
+																	<td>
+																		<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>
+																	</td>
+																	<td style="text-align:right;font-size:9px;">
+																		<strong>Generated By: </strong> <span t-esc="user.name"/>
+																	</td>
+																</tr>
+															</thead>
+														</table>
+													</div>
+												</div>
+											</td>
+										</t>
+									</tr>
+								</table>
+							</div>
+					    </t>
+					</t>
+				</div>
+			</t>
+		</template>
+
+		<!--Duplicate-->
+		<template id="report_duplicate_fee_receipt">
+            <t t-call="report.html_container">
+			<t t-set="data_report_dpi" t-value="110"/>
+				<div style ="width:50%">
+			       	<t t-foreach="docs" t-as="doc">
+						<t t-call="pappaya_fees.dis_fee_layout">
+							<div class="page">
+							
+								<!--Header-->
+								<t t-foreach="doc.get_school()" t-as="o">
+									<table style="width:100%;">
+										<tr style="width:100%;">
+											<t t-foreach="[1]" t-as="record111">
+												<td style="width:50%;">
+												<div class="row">
+													<div class="col-xs-2"/>
+													<div class="col-xs-9" style="text-align:right;font-size:15px;">
+														<t t-if="doc.state != 'cancel'" >	
+															<strong>Duplicate Receipt - Office Copy</strong>
+														</t>
+														<t t-if="doc.state == 'cancel'" >	
+															<strong>Cancelled Receipt - Office Copy</strong>
+														</t>
+													</div>
+												</div>
+												</td>
+											</t>
+											<t t-foreach="[2]" t-as="record111">
+												<td style="width:50%;">
+												<div class="row">
+													<div class="col-xs-2"/>
+													<div class="col-xs-9" style="text-align:right;font-size:15px;">
+														<t t-if="doc.state != 'cancel'" >
+															<strong>Duplicate Receipt - Student Copy</strong>
+														</t>
+														<t t-if="doc.state == 'cancel'" >
+															<strong>Cancelled Receipt - Student Copy</strong>
+														</t>
+													</div>
+												</div>
+												</td>
+											</t>
+										</tr>
+									</table>
+									<br/>
+									<table style="width:100%;">
+										<tr style="width:100%;">
+											<t t-foreach="[1,2]" t-as="record111">
+												<td style="width:50%;">
+													<div class="row">
+														<div class="col-xs-2">
+															<img t-att-src="'data:image/png;base64,%s' % o['logo']"
+															style="height:80px; max-height:90px; width:80px; max-width:90px; margin-left:20px;"/>
+														</div>
+														<div class="col-xs-9">
+															<div style="font-weight:500;font-size:15px; text-align:center;">
+																<t t-if="o['school_id']"> <strong><span t-esc="o['school_id']"/></strong></t>
+															</div>
+															<div style="font-size:10px; text-align:center;">
+																<t t-if="o['street']"> <span t-esc="o['street']"/>,</t>
+																<t t-if="o['street2']"> <span t-esc="o['street2']"/></t>,
+																<t t-if="o['city']"> <span t-esc="o['city']"/> </t>-
+																<t t-if="o['zip']"> <span t-esc="o['zip']"/></t>
+															</div>
+															<div style="font-size:10px; text-align:center;">
+																<t t-if="o['phone']"> Tel: <span t-esc="o['phone']"/>,</t>
+																<t t-if="o['fax']"> Fax: <span t-esc="o['fax']"/></t> <br/>
+																<t t-if="o['email']"> Email: <span t-esc="o['email']"/></t>
+															</div>
+															<div style="font-size:10px; text-align:center;">
+																<t t-if="o['website']"><span t-esc="o['website']"/></t>
+															</div>
+														</div>
+													</div>
+												</td>
+											</t>
+										</tr>
+									</table>
+								</t>
+								<br/>
+								<!--Content-->
+								<table style="width:100%;">
+									<tr style="width:100%;">
+										<t t-foreach="[1,2]" t-as="record111">
+											<td style="width:45%;">
+												<table class="table table-condensed table-bordered" style="border:1px solid black;font-size:10px;">
+													<thead>
+														<th colspan="6" style="border:1px solid black;"><center><b>Receipt</b></center></th>
+													</thead>
+													<tbody class="fee_tbody">
+														<tr>
+															<td>STUDENT ID</td>
+															<td>:</td>
+															<td><t t-esc="doc.enrollment_number"/></td>
+															<td>RECEIPT NO</td>
+															<td>:</td>
+															<td><span t-esc="doc.name"/></td>
+														</tr>
+														<tr>
+															<td>STUDENT NAME</td>
+															<td>:</td>
+															<td><t t-esc="doc.student_id.full_name"/></td>
+															<td>DATE</td>
+															<td>:</td>
+															<td>
+																<t t-if="doc.receipt_date">
+																<span t-esc="time.strftime('%d/%b/%Y', time.strptime(doc.receipt_date,'%Y-%m-%d'))" />
+																</t>
+															</td>
+														</tr>
+															<tr>
+															<td>PARENT NAME</td>
+															<td>:</td>
+															<td><t t-esc="doc.student_id.father_name"/></td>
+															<td>GRADE</td>
+															<td>:</td>
+															<td><t t-esc="doc.grade_id.name"/></td>
+														</tr>
+													</tbody>
+												</table>
+												<table class="table table-condensed table-bordered" style="border:1px solid black;font-size:10px;">
+													<thead>
+														<th colspan="4" style="border:1px solid black;"><center><b>Payment Details</b></center></th>
+													</thead>
+													<tr>
+														<td><b>Name</b></td>
+														<td><b>Charged Date</b></td>
+														<td style="text-align:right;"><b>Amount</b></td>
+														<!-- <td><b>Concession</b></td> -->
+													</tr>
+													<tbody class="fee_tbody">
+														<t t-if="doc.fees_receipt_line">
+															<t t-foreach="doc.fees_receipt_line" t-as="ln">
+																<tr>
+																	<td><span t-esc="ln.name"/></td>
+																	<td><span t-esc="time.strftime('%d/%b/%Y', time.strptime(ln.receipt_id.receipt_date,'%Y-%m-%d'))"/></td>
+																	<td style="text-align:right;"><span t-esc=" '%.2f' % ln.amount"/></td>
+																	<!-- <td><span t-esc=" '%.2f' % ln.concession_amount"/></td> -->
+																</tr>
+															</t>
+														 </t>
+													</tbody>
+													<tr>
+														<td/>
+														<td style="text-align:right;"><b>Total:</b></td>
+														<td style="text-align:right;"><b><span t-esc=" '%.2f' % doc.total"/></b></td>
+														<!-- <td/> -->
+													</tr>
+												</table>
+												
+												
+												
+												<table style="font-size:9px;">
+													<tr>
+														<td><strong>In words</strong></td>
+														<td> <strong>: </strong></td>
+														<td><span t-esc="doc.amount_to_text_in(doc.total,doc.school_id.currency_id)"/></td>
+													</tr>
+													<tr>
+													    <td><strong>Mode Of Payment</strong></td>
+													    <td><strong> : </strong></td>
+														<td><span t-esc="doc.get_value_duplicate()"/></td>
+													</tr>
+													<tr>
+													    <td><strong>CHQ/DD/POS/Ref.No</strong></td>
+													    <td><strong> : </strong></td>
+													    <td><span t-esc="doc.cheque_dd"/></td>
+													</tr>
+												</table>
+												
+												
+	
+												
+												<div  class="row">
+														<div class="col-xs-9 pull-left">
+															<t t-if="doc.fee_collection_id.bulk_term_state == 'due'">
+																<table class="table table-condensed table-bordered" style="font-size:9px;">
+																	<thead>
+																		<th colspan="3" style="border:1px solid black;"><center><b>Fee Dues Particulars</b></center></th>
+																	</thead>
+																	<tr>
+																		<td ><b>Fee Type</b></td>
+																		<td style="text-align:right;"><b>Amount Due</b></td>
+																		<td ><b>Due Date</b></td>
+																		
+																	</tr>
+																	<tbody >
+																		<t t-foreach="doc.next_due_date_and_payment_details()" t-as="ln">
+																			<tr >
+																				<td ><span t-esc="ln['fee_type']"/></td>
+																				<td style="text-align:right;"><span t-esc=" '%.2f' % ln['due_amount']"/></td>
+																				<td ><span t-esc="ln['due_date']"/></td>
+																			</tr>
+																		</t>
+																	</tbody>
+																	
+																</table>
+															</t>		
+														</div>
+														<div class="col-xs-3 pull-right">
+																<img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', ('Receipt No' + ' : ' + str(doc.name) + '\n' +
+																																							'Student No' + ' : ' + str(doc.enrollment_number) + '\n' +
+																																							'Student Name' + ' : ' + str(doc.student_id.name) + '\n' +
+																																							'Class' + ' : ' + str(doc.grade_id.name) + '\n' +
+																																							'Parent Name' + ' : ' + str(doc.student_id.father_name or '') + '\n' +
+																																							'Paid Date' + ' : ' + str(time.strftime('%d/%b/%Y', time.strptime(doc.receipt_date,'%Y-%m-%d'))) + '\n' + '\n' +
+																																							'Total Payment' + ' : ' + str(doc.total)), 300, 100)" style="width:100px;height:100px"/>
+														</div>
+													
+												</div>
+												<p>
+													<h5><strong style="font-size:9px;">*Fee Once Paid neither refundable nor transferable</strong></h5>
+													<t t-if="doc.payment_mode in ['cheque/dd']">
+														<h4 style="font-size:9px;"><left>payment by Cheque(s) are subject to realization.</left></h4>
+													</t>
+													<t t-if="doc.payment_mode in ['dd']">
+														<h4 style="font-size:9px;"><left>payment by Demand Draft(s) are subject to realization.</left></h4>
+													</t>
+													<t t-if="doc.payment_mode in ['neft/rtgs']">
+														<h4 style="font-size:9px;"><left>payment by NEFT/RTGS are subject to realization.</left></h4>
+													</t>
+													
+													<t t-if="doc.payment_mode in ['cheque/dd']">
+														<h4 style="font-size:9px;"><left>Cheque(s) to be drawn in favor of <span t-esc="doc.society_id.name"/></left></h4>
+													</t>
+													<t t-if="doc.payment_mode in ['dd']">
+														<h4 style="font-size:9px;"><left>Demand Draft(s) to be drawn in favor of <span t-esc="doc.society_id.name"/></left></h4>
+													</t>
+													<h4 style="font-size:9px;"><center>Thank you for choosing <span t-esc="doc.school_id.name"/></center></h4>
+													<h4 style="font-size:9px;"><center>We value your patronage</center></h4>
+												</p>
+												
+											</td>
+											<td>
+												<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>
+											</td>
+										</t>
+									</tr>
+								</table>
+							</div>
+							<!--Footer-->
+							<div class="footer">
+								<table style="width:100%;">
+									<tr>
+										<t t-foreach="[1,2]" t-as="record111">
+											<td style="width:45%;">
+												<div style="text-align:left;">
+													<div style="font-size:10px;margin-bottom:10px">
+														<strong>This is system generated receipt does not required seal &amp; sign.</strong><br/>
+														<strong>For any queries, contact 18004199678</strong>
+														<table>
+															<thead>
+																<tr>
+																	<td style="text-align:left;font-size:9px;">
+																		<strong>Dated On: </strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y %H:%M:%S')"/>
+																	</td>
+																	<td>
+																		<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>
+																	</td>
+																	<td>
+																		<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>
+																	</td>
+																	<td>
+																		<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>
+																	</td>
+																	<td style="text-align:right;font-size:9px;">
+																		<strong>Generated By: </strong> <span t-esc="user.name"/>
+																	</td>
+																</tr>
+															</thead>
+														</table>
+													</div>
+												</div>
+											</td>
+										</t>
+									</tr>
+								</table>
+							</div>
+					    </t>
+					</t>
+				</div>
+			</t>
+		</template>
+
+		<report
+            id="print_fee_receipt_original"
+            model="pappaya.fees.receipt"
+            string="Fees Receipt"
+            report_type="qweb-pdf"
+            name="pappaya_fees.report_original_fee_receipt"
+            file="pappaya_fees.report_original_fee_receipt"
+            attachment_use="False"
+            menu="False"
+        />
+
+		<record id="pappaya_fees.print_fee_receipt_original" model="ir.actions.report.xml">
+	        <field name="paperformat_id" ref="pappaya_core.paperformat_euro_landscape"/>
+    	</record>
+
+		<report
+            id="print_fee_receipt_duplicate"
+            model="pappaya.fees.receipt"
+            string="Fees Receipt"
+            report_type="qweb-pdf"
+            name="pappaya_fees.report_duplicate_fee_receipt"
+            file="pappaya_fees.report_duplicate_fee_receipt"
+            attachment_use="False"
+            menu="False"
+        />
+
+		<record id="pappaya_fees.print_fee_receipt_duplicate" model="ir.actions.report.xml">
+	        <field name="paperformat_id" ref="pappaya_core.paperformat_euro_landscape"/>
+    	</record>
+
+    </data>
+</openerp>

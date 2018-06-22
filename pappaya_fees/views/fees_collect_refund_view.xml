@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+     <record id="fees_collect_refund_form" model="ir.ui.view">
+     	 <field name="name">fees.collect.refund.form</field>
+		 <field name="model">fees.collect.refund</field>
+		 <field name="arch" type="xml">
+		    <form string="Fees Collect Refund"  duplicate="0">
+		       <header>
+		         <button name="request_in_refund" string="Request" states="draft" type="object" class="oe_highlight" groups="pappaya_core.group_pappaya_school_level_officer,pappaya_core.group_pappaya_school_level_fin_admin
+		         ,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_national_level_it_admin,base.group_erp_manager"/>
+		         <button name="act_approve_refund" string="Approve" states="requested" type="object" class="oe_highlight" groups="pappaya_core.group_pappaya_state_level_it_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_national_level_it_admin,base.group_erp_manager"/>
+		         <button name="act_reject_refund" string="Reject" states="requested" type="object" class="oe_highlight" groups="pappaya_core.group_pappaya_state_level_it_admin,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_national_level_it_admin,base.group_erp_manager"/>
+		         <button name="confirm_refund" string="Fee refund" states="approved" type="object" class="oe_highlight" groups="pappaya_core.group_pappaya_school_level_officer,pappaya_core.group_pappaya_school_level_fin_admin
+		         ,pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_national_level_it_admin,base.group_erp_manager"/>
+		         <field name="state" widget="statusbar" statusbar_visible="draft,requested,approved,rejected,refund"/>
+		       </header>
+		       <sheet>
+		         <group col="4" colspan="4">
+		           <field name="society_id" class="asterik" options="{'no_open': True,'no_create':True}" required="1" domain="[('type','=','society')]"/>
+				   <field name="school_id" class="asterik" options="{'no_open': True,'no_create':True}" required="1" domain="[('type','=','school'),('parent_id','=',society_id)]"/>
+				   <field name="academic_year_id" class="asterik"  domain="[('school_id', '=', school_id)]" options="{'no_open': True,'no_create':True}"  required="1"/>
+				   <field name="grade_id" class="asterik" options="{'no_open': True,'no_create':True}" required="1"/>
+				   <field name="student_id" placeholder="Student Name" options="{'no_open': True,'no_create':True}" domain="[('school_id', '=', school_id),('grade_id', '=', grade_id)]" />
+				   <field name="enrollment_number" readonly="1"/>
+				   
+		         </group>
+		         <group col="4" colspan="4">
+		            <field name="payment_mode" required="1" class="asterik"/>
+		            <field name="cheque_dd" class="asterik" attrs="{'invisible':[('payment_mode' ,'=' ,'cash')],'required':[('payment_mode' ,'!=' ,'cash')]}" />
+					<field name="bank_name" class="asterik" attrs="{'invisible':[('payment_mode' ,'=' ,'cash')],'required':[('payment_mode' ,'!=' ,'cash')]}"/>
+		         </group>
+		         <group col="4">
+							<field name="refund_fee_collection" nolabel="1" colspan="4"  class="fixed_table" open="false">
+								<tree string ="Fees refund collection" editable="bottom" create="false" delete="false" open="false">
+									<field name="pay" attrs="{'readonly':[('readonly_state','=','done')]}"/>
+									<field name="name" readonly="1"/>
+									<field name="term_divide" readonly="1" invisible="1"/>
+									<field name="partial_payment" readonly="1" invisible="1"/>
+									<field name="amount" readonly="1"/>
+									<field name="concession_amount" readonly="1"/>
+									<field name="concession_type_id" options="{'no_open': True,'no_create':True}" readonly="1"/>
+									<field name="concession_applied" readonly="1"/>
+									<field name="fee_refund_amount" invisible="1" readonly="1"/>
+									<field name="due_amount" readonly="1"/>
+									<field name="total_paid" readonly="1"/>
+									<field name="refund_amount" attrs="{'readonly':[('readonly_state','=','done')]}"/>
+									<field name="term_state" readonly="1"/>
+									<field name="readonly_state" invisible="1"/>
+								</tree>
+								<form string="Fees refund collection">
+									<group col="4" colspan="4">
+										<field name="pay" attrs="{'readonly':[('readonly_state','=','done')]}"/>
+										<field name="name" readonly="1"/>
+										<field name="term_divide" readonly="1" invisible="1"/>
+										<field name="partial_payment" readonly="1" invisible="1"/>
+										<field name="amount" readonly="1"/>
+										<field name="concession_amount" readonly="1"/>
+										<field name="concession_type_id" options="{'no_open': True,'no_create':True}" readonly="1"/>
+										<field name="concession_applied" readonly="1"/>
+										<field name="fee_refund_amount" invisible="1" readonly="1"/>
+										<field name="due_amount" readonly="1"/>
+										<field name="total_paid" readonly="1"/>
+										<field name="refund_amount" attrs="{'readonly':[('readonly_state','=','done')]}"/>
+										<field name="term_state" readonly="1"/>
+										<field name="readonly_state" invisible="1"/>
+									</group>
+								</form>
+							</field>
+				  </group>
+		         <group>
+				 	<field name="total_refund_amount"/>
+		            <field name="remarks" />
+					<field name="collection_id" invisible="1"/>
+		         </group>
+		       </sheet>
+		    </form>
+		 </field>
+     </record>
+     
+     
+     <record id="fees_collect_refund_tree" model="ir.ui.view">
+			<field name="name">fees.collect.refund.tree</field>
+			<field name="model">fees.collect.refund</field>
+			<field name="priority" eval="5" />
+			<field name="arch" type="xml">
+				<tree string="Fees Collect Refund">
+				    <field name="society_id" />
+				    <field name="school_id"/>
+				    <field name="grade_id"/>
+				    <field name="enrollment_number"/>
+				    <field name="student_id"/>
+				</tree>
+			</field>
+		</record>
+     
+     
+     <record id="fees_collect_refund_search" model="ir.ui.view">
+            <field name="name">fees.collect.refund.search</field>
+            <field name="model">fees.collect.refund</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Fees Collect Refund">
+                    <field name="society_id" />
+				    <field name="school_id"/>
+				    <field name="grade_id"/>
+				    <field name="enrollment_number"/>
+				    <field name="student_id"/>
+                    <newline />
+					<group expand="0" string="Group By...">
+                        <filter string="Society" domain="[]" context="{'group_by':'society_id'}" />
+						<filter string="School" domain="[]" context="{'group_by':'school_id'}" />
+						<filter string="Academic Year" domain="[]" context="{'group_by':'academic_year_id'}"/>
+						<filter string="Class" domain="[]" context="{'group_by':'grade_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+     
+     <!-- Fees Refund Collect Windows Action -->
+		<record model="ir.actions.act_window" id="action_fees_collect_refund_id">
+			<field name="name">Fees Management > Fees Collect Refund</field>
+			<field name="res_model">fees.collect.refund</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+     
+     
+  </data>
+</odoo>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="pappaya_fees_structure_form" model="ir.ui.view">
+			<field name="name">pappaya.fees.structure.form</field>
+			<field name="model">pappaya.fees.structure</field>
+			<field name="arch" type="xml">
+				<form string="Fees Structure" version="7.0" duplicate="0">
+					<sheet>
+						<group col="4" colspan="2">
+<!--
+							<field name="society_id" options="{'no_open': True,'no_create':True}" domain="[('type','=','society')]"/>
+							
+-->	
+							<field name="society_ids" widget="many2many_tags"  options="{'no_open': True,'no_create':True}" domain="[('type','=','society')]" required="1" class="asterik"/>
+							<field name="school_ids"  widget="many2many_tags" options="{'no_open': True,'no_create':True}"  domain="[('type','=','school')]" required="1" class="asterik"/>
+<!--
+							<field name="school_id" options="{'no_open': True,'no_create':True}" domain="[('type','=','school'),('parent_id','=',society_id)]" required="1" class="asterik"/>
+-->
+							<field name="academic_year_id" options="{'no_open': True,'no_create':True}"  required="1" class="asterik" />
+<!--
+							<field name="name" required="1"/>
+-->
+							<field name="grade_ids_m2m" widget="many2many_tags" required="1"  options="{'no_open': True,'no_create':True}" class="asterik"/>
+						</group>
+						<group col="2">
+							 <separator string="Fees Head" colspan="2"/>
+							<field name="fee_head_line" nolabel="1" >
+								<tree string ="Fees Head" editable="bottom" create="false" delete="false">
+									<field name="head_id"  readonly="1"/>
+									<field name="partial_payment" readonly="1"/>
+									<field name="amount" required="1"/>
+								</tree>
+								<form string ="Fees Head">
+									<group col="2">
+										<field name="head_id" readonly="1"/>
+										<field name="partial_payment" readonly="1"/>
+										<field name="amount" required="1"/>
+									</group>
+								</form>
+							</field>
+						</group>
+						<group col="2">
+						<button type="object" name="generate_fees" string="Generate Fees" class="oe_highlight" colspan="2"
+							groups="pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_it_admin,pappaya_core.group_pappaya_national_level_fin_admin"/>
+							<separator string="Fees Configuration" colspan="2"/>
+							<field name="fee_term_line" nolabel="1" create="false" >
+								<tree string ="Fees Configuration" editable="bottom" create="false" delete="false">
+									<field name="name" readonly="1"/>
+									<field name="amount" readonly="1"/>
+									<field name="partial_payment" readonly="1"/>
+									<field name="percentage" readonly="1"/>
+								</tree>
+								<form string ="Fees Configuration">
+									<group col="2">
+										<field name="name" readonly="1"/>
+										<field name="term_divide" readonly="1"/>
+										<field name="term_id" readonly="1"/>
+										<field name="amount" readonly="1"/>
+										<field name="partial_payment" readonly="1"/>
+										<field name="percentage" readonly="1"/>
+									</group>
+								</form>
+							</field>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="pappaya_fees_structure_tree" model="ir.ui.view">
+			<field name="name">pappaya_fees_structure_tree</field>
+			<field name="model">pappaya.fees.structure</field>
+			<field name="priority" eval="5" />
+			<field name="arch" type="xml">
+				<tree string="Fees Structure">
+				    <field name="school_ids"/>
+				    <field name="society_ids"/>
+				    <field name="academic_year_id"/>
+				    <field name="grade_ids_m2m"/>
+<!--
+					<field name="name" />
+-->
+				</tree>
+			</field>
+		</record>
+		
+		
+		<record id="pappaya_fees_structure_search" model="ir.ui.view">
+            <field name="name">pappaya.fees.structure.search</field>
+            <field name="model">pappaya.fees.structure</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Fees Structure">
+                    <field name="school_ids"/>
+                    <field name="society_ids"/>
+                    <field name="academic_year_id"/>
+                    <newline />
+					<group expand="0" string="Group By...">
+<!--
+						<filter string="Society" domain="[]" context="{'group_by':'society_ids'}" />
+						<filter string="School" domain="[]" context="{'group_by':'school_ids'}" />
+-->
+						<filter string="Academic Year" domain="[]" context="{'group_by':'academic_year_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+		
+		
+		<record model="ir.actions.act_window" id="action_pappaya_fees_structure_id">
+			<field name="name"> Fees Management > Configuration > Fees Structure</field>
+			<field name="res_model">pappaya.fees.structure</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		
+		
+	</data>
+</odoo>

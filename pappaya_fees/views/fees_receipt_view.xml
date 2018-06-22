@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Fees Receipt Form -->
+        <record id="pappaya_fees_receipt_form" model="ir.ui.view">
+            <field name="name">pappaya.fees.receipt.form</field>
+            <field name="model">pappaya.fees.receipt</field>
+            <field name="arch" type="xml">
+                <form string="Fees Receipt" create="false" edit="false">
+                    <header>
+                        <button name="cancel_approval" type="object" states="paid" string="Cancel" class="oe_highlight" 
+                        groups="pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin,pappaya_core.group_pappaya_school_level_officer,pappaya_core.group_pappaya_school_level_fin_admin"/>
+                        <button name="cancel_approved" string="Approve" states="waiting_approval" type="object" class="oe_highlight"
+                        groups="pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin"/>
+                        <button name="cancel_rejected" string="Reject" states="waiting_approval" type="object" class="oe_highlight"
+                        groups="pappaya_core.group_pappaya_national_level_officer,pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_state_level_officer,pappaya_core.group_pappaya_state_level_fin_admin"/>
+                        <field name="state" widget="statusbar" statusbar_visible="paid,waiting_approval,cancel"/>
+                    </header>
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <button name="generate_receipt_report" type="object" string="Print" class="oe_highlight"/>
+                            <button name="view_all_ledger_details" type="object" string="View Ledger Details" class="oe_highlight"
+                            		groups="pappaya_core.group_pappaya_national_level_fin_admin,pappaya_core.group_pappaya_state_level_fin_admin"/>
+                        </group>
+                        <group col="4" colspan="4">
+                            <field name="name" readonly="1"/>
+                            <field name="society_id" options="{'no_open': True,'no_create':True}" domain="[('type','=','society')]" readonly="1"/>
+                            <field name="school_id" options="{'no_open': True,'no_create':True}" domain="[('type','=','school'),('parent_id','=',society_id)]" readonly="1"/>
+                            <field name="academic_year_id" domain="[('school_id', '=', school_id)]" options="{'no_open': True,'no_create':True}" readonly="1" />
+                            <field name="grade_id" options="{'no_open': True,'no_create':True}" readonly="1"/>
+                            <field name="student_id" placeholder="Student Name" options="{'no_open': True,'no_create':True}" domain="[('grade_id', '=', grade_id)]" readonly="1"/>
+                            <field name="enrollment_number" readonly="1"/>
+                            <field name="receipt_date" readonly="1"/>
+                            <field name="pay_due_total" invisible="1"/>
+                            <field name="receipt_status" invisible="1"/>
+                            <field name="is_select" invisible="1"/>
+                            <field name="school_code" invisible="1"/>
+                        </group>
+                        <group col="4">
+                            <field name="fees_receipt_line" nolabel="1" colspan="4">
+                                <tree string ="Fees Receipt" create="false" delete="false">
+                                    <field name="name" readonly="1"/>
+                                    <field name="term_divide" readonly="1"/>
+                                    <field name="amount" readonly="1"/>
+                                    <field name="concession_amount" readonly="1"/>
+                                </tree>
+                                <form string = "Fees Collection">
+                                    <group col="4" colspan="4">
+                                        <field name="name" readonly="1"/>
+                                        <field name="term_divide" readonly="1"/>
+                                        <field name="amount" readonly="1"/>
+                                        <field name="concession_amount" readonly="1"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </group>
+                        <separator string="" colspan="4"/>
+                        <group col="2" colspan="2">
+                            <field name="payment_mode" readonly="1"/>
+                            <field name="cheque_dd" readonly="1"/>
+                            <field name="bank_name" readonly="1"/>
+                            <field name="remarks" readonly="1"/>
+                        </group>
+                        
+                    </sheet>
+                    <group>
+                        <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                <label for="total" />
+                            </div>
+                            <field name="total" nolabel="1" class="oe_subtotal_footer_separator" />
+                        </group>
+                    </group>
+                    
+                </form>
+            </field>
+        </record>
+        
+        <!-- Fees Receipt Tree -->
+        
+        <record id="pappaya_fees_receipt_tree" model="ir.ui.view">
+            <field name="name">pappaya.fees.receipt.tree</field>
+            <field name="model">pappaya.fees.receipt</field>
+            <field name="priority" eval="5" />
+            <field name="arch" type="xml">
+                <tree string="Fees Term" edit="false" colors="red:state == 'cancel';blue:state == 'refund' ">
+                    <field name="name"/>
+                    <field name="society_id" />
+                    <field name="school_id"/>
+                    <field name="grade_id"/>
+                    <field name="enrollment_number"/>
+                    <field name="student_id"/>
+                    <field name="receipt_date"/>
+		    <field name="payment_mode"/>
+		     <field name="total" />
+		     <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Fees Receipt Search -->
+        
+        <record id="pappaya_fees_receipt_search" model="ir.ui.view">
+            <field name="name">pappaya_fees_receipt_search</field>
+            <field name="model">pappaya.fees.receipt</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Enquiry">
+                    <field name="name"/>
+                    <field name="society_id" />
+                    <field name="school_id"/>
+                    <field name="grade_id"/>
+                    <field name="enrollment_number"/>
+                    <field name="student_id"/>
+                    <field name="receipt_date"/>
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="Society" domain="[]" context="{'group_by':'society_id'}" />
+                        <filter string="School" domain="[]" context="{'group_by':'school_id'}" />
+                        <filter string="Academic Year" domain="[]" context="{'group_by':'academic_year_id'}"/>
+                        <filter string="Class" domain="[]" context="{'group_by':'grade_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+        
+        <!-- Fees Receipt Windows Action -->
+        <record model="ir.actions.act_window" id="action_pappaya_fees_receipt_id">
+            <field name="name">Fees Management > Fees Receipt</field>
+            <field name="res_model">pappaya.fees.receipt</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('receipt_status','=','cleared')]</field>
+        </record>
+
+    </data>
+</odoo>

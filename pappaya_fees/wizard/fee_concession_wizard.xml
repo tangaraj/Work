@@ -1,0 +1,37 @@
+<openerp>
+    <data>
+
+        <record id="view_fee_concession_wizard_report" model="ir.ui.view">
+            <field name="name">Fee Concession</field>
+            <field name="model">fee.concession.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Fee Concession">
+                    <group>
+                        <group>
+			                <field name="society_ids" widget="many2many_tags" domain="[('type','=','society')]" options="{'no_open': True,'no_create':True}"/>
+                            <field name="school_ids" widget="many2many_tags" domain="[('type','=','school')]" options="{'no_open': True,'no_create':True}"/>
+                            <field name="academic_year_ids" widget="many2many_tags"  options="{'no_open': True,'no_create':True}"/>
+                            <field name="student_ids" widget="many2many_tags"  options="{'no_open': True,'no_create':True}"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <footer>
+                        <button string="PDF" name="generate_pdf_report" class="oe_highlight" type="object"/>
+                        <button string="Excel" name="generate_excel_report" class="oe_highlight" type="object"/>
+                        <button string="Cancel" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_fee_concession_wizard_report" model="ir.actions.act_window">
+            <field name="name">Fee Concession</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fee.concession.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,160 @@
+<openerp>
+    <data>
+
+        <template id="template_fee_concession">
+            <t t-call="report.html_container">
+		   <t t-set="data_report_margin_top" t-value="40"/>
+		    <t t-set="data_report_dpi" t-value="90"/>
+                <t t-foreach="docs" t-as="o">
+                    <t t-foreach="o.get_school_header()" t-as="l">
+                        <div class="header">
+                            <div class="row">
+                                <div class="col-xs-2" style="text-align:center;">
+                                    <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' % res_company.logo" style="height:110px;max-height:130px;width:110px;max-width:130px;margin-left:20px;"/>
+                                </div>
+                                <div class="col-xs-10">
+                                    <div style="font-weight:700;font-size:20px; text-align:center;">
+                                        <t t-if="l['school_id']"> <strong><span t-esc="l['school_id']"/></strong></t>
+                                    </div>
+                                    <div style="font-size:15px; text-align:center;">
+                                        <t t-if="l['street']"> <span t-esc="l['street']"/>,</t>
+                                        <t t-if="l['street2']"> <span t-esc="l['street2']"/>,</t>
+                                        <t t-if="l['city']"> <span t-esc="l['city']"/> </t>-
+                                        <t t-if="l['zip']"> <span t-esc="l['zip']"/></t>
+                                    </div>
+                                    <div style="font-size:15px; text-align:center;">
+                                        <t t-if="l['phone']"> Tel: <span t-esc="l['phone']"/>,</t>
+                                        <t t-if="l['fax']"> Fax: <span t-esc="l['fax']"/>,</t>
+                                        <t t-if="l['email']"> Email: <span t-esc="l['email']"/></t>
+                                    </div>
+                                    <div style="font-size:14px; text-align:center;">
+                                        <t t-if="l['website']"> Website: <span t-esc="l['website']"/></t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-foreach="o.get_society_header()" t-as="soc">
+                        <div class="header">
+                            <div class="row">
+                                <div class="col-xs-2" style="text-align:center;">
+                                    <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' % res_company.logo" style="height:110px;max-height:130px;width:110px;max-width:130px;margin-left:20px;"/>
+                                </div>
+                                <div class="col-xs-10">
+                                    <br/><br/>
+                                    <div style="font-weight:600;font-size:22px;text-align:center;">
+                                        <t t-if="soc['society_id']"> <strong><span t-esc="soc['society_id']"/></strong></t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <div class="page">
+                        <style>
+                            .row1 {
+                                text-align:center;
+                                font-size:18px;
+                                border-top:1px solid black;
+                                padding-top:10px;
+                                padding-bottom:10px
+                                }
+                            .row2 {
+                                text-align:center;
+                                font-size:16px;
+                                padding-bottom:5px
+                                }
+                            .table-condensed {
+                                width:100%;
+                                border:1px solid black;
+                                font-size:16px;
+                                page-break-inside: avoid;
+                                page-break-after : always;
+                                white-space: nowrap;
+                                }
+                            .result1 td {
+                                text-align:center;
+                                vertical-align:middle;
+                                border-right:1px solid black;
+                                border-bottom:1px solid black;
+                                }
+                            .result2 td {
+                                text-align:center;
+                                vertical-align:middle;
+                                border-right:1px solid black;
+                                border-bottom:1px solid black;
+                                }
+                               .DIS_watermark_report{
+                                background:url('/theme_pappaya/static/src/img/logo_dis.png') no-repeat center center; position:fixed; width:100%; height:100%; pointer-events: none; opacity:0.15; z-index:9999}
+                                }
+                        </style>
+                        <!--<div class="DIS_watermark_report"/>-->
+                        <div class="row1">
+                            <strong>FEE CONCESSION</strong>
+                        </div>
+                        <div>
+                            <table class="table-condensed">
+                                <thead>
+                                    <tr class="result1">
+                                        <td><strong>Society</strong></td>
+                                        <td><strong>School</strong></td>
+                                        <td><strong>Academic Year</strong></td>
+                                        <td><strong>Student ID</strong></td>
+                                        <td><strong>Student Name</strong></td>
+                                        <td><strong>Concession Type</strong></td>
+                                        <td><strong>Fee Head</strong></td>
+                                        <td><strong>Amount</strong></td>
+                                        <td><strong>Remarks</strong></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.get_concession_data()" t-as="l">
+                                        <tr class="result2">
+                                            <td><span t-esc="l['society']"/></td>
+                                            <td><span t-esc="l['school']"/></td>
+                                            <td><span t-esc="l['academic']"/></td>
+                                            <td><span t-esc="l['stud_id']"/></td>
+                                            <td><span t-esc="l['stud_name']"/></td>
+                                            <td><span t-esc="l['type']"/></td>
+                                            <td><span t-esc="l['fee_head']"/></td>
+                                            <td><span t-esc="l['amount']"/></td>
+                                            <td><span t-esc="l['remarks']"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="footer">
+						<table>
+							<thead>
+								<tr>
+									<td class="col-xs-5 pull-left" style="font-size:16px;">
+										<strong>Dated On: </strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y %H:%M:%S')"/>
+									</td>
+									<td class="col-xs-2 pull-right" style="font-size:16px;">
+										<strong>Generated By: </strong> <span t-esc="user.name"/>
+									</td>
+								</tr>
+							</thead>
+						</table>
+					</div>
+                </t>
+            </t>
+        </template>
+
+        <report
+            id="print_fee_concession"
+            model="fee.concession.wizard"
+            string="Fee Concession"
+            report_type="qweb-pdf"
+            name="pappaya_fees.template_fee_concession"
+            file="pappaya_fees.template_fee_concession"
+            attachment_use="False"
+        />
+
+        <record id="pappaya_fees.print_fee_concession" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="pappaya_core.paperformat_euro_landscape"/>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<!-- Fees Collection Form -->
+		<record id="pappaya_fees_collection_form" model="ir.ui.view">
+			<field name="name">pappaya.fees.collection.form</field>
+			<field name="model">pappaya.fees.collection</field>
+			<field name="arch" type="xml">
+				<form string="Fees collection" create="false" duplicate="0">
+					<sheet>
+						<group col="4" colspan="2">
+							<field name="society_id" options="{'no_open': True,'no_create':True}" domain="[('type','=','society')]" readonly="1"/>
+							<field name="school_id" options="{'no_open': True,'no_create':True}" domain="[('type','=','school'),('parent_id','=',society_id)]" required="1"  class="asterik" readonly="1"/>
+							<field name="academic_year_id" domain="[('school_id', '=', school_id)]" options="{'no_open': True,'no_create':True}" readonly="1"/>
+							<field name="grade_id" options="{'no_open': True,'no_create':True}"  class="asterik" readonly="1"/>
+							<field name="student_id" placeholder="Student Name" style="font-size: 20px !important; color:  black !important; padding-bottom:18px;" options="{'no_open': True,'no_create':True}" domain="[('grade_id', '=', grade_id)]" readonly="1" attrs="{'invisible':[('enquiry_create','=',False)]}"/>
+							<field name="enrollment_number" readonly="1" />
+							<field name="collection_date" required="1" class="asterik"/>
+							<field name="excess_amt" readonly="1" attrs="{'invisible':['|',('excess_amt' ,'=', '0.0'),('excess_amt' ,'=', False)]}" style="font-size: 20px !important; color:  black !important; padding-bottom:18px;"/>
+							<field name="enquiry_mode" nolabel="1"  options="{'horizontal': true}"  
+					                 style="font-size: 20px !important; color: red !important; padding-bottom:18px;" colspan="2" readonly="1"/>
+					                <field name="rte_fee_exempted" readonly="1" attrs="{'invisible':[('enquiry_mode','=','normal')]}"/>
+							<field name="enquiry_create" invisible="1"/>
+							<field name="active" invisible="1" />
+							<field name="current_user" invisible="1"/>
+							<field name="applicant_name" readonly="1" attrs="{'invisible':[('enquiry_create','=',True)]}" style="font-size: 20px !important; color:  black !important; padding-bottom:18px;"/>
+						</group>
+<!--
+						<group string="Bulk Payment" colspan="2" invisible="1">
+							<field name="bulk_pay" attrs="{'readonly':[('bulk_state' ,'=' ,'paid')]}" invisible="1"/>
+						</group>
+-->
+<!--
+						<group col="4">
+							<field name="fees_bulk_line" nolabel="1" colspan="4" attrs="{'invisible':[('bulk_pay' ,'=' ,False)]}">
+								<tree string ="Fees Collection Bulk Payment" editable="bottom">
+									<field name="name" readonly="1"/>
+									<field name="term_divide" readonly="1"/>
+									<field name="amount" readonly="1"/>
+									<field name="concession_amount"/>
+								</tree>
+								<form string = "Fees Collection Bulk Payment">
+									<group col="4" colspan="4">
+										<field name="name" readonly="1"/>
+										<field name="term_divide" readonly="1"/>
+										<field name="amount" readonly="1"/>
+										<field name="concession_amount"/>
+									</group>
+								</form>
+							</field>
+						</group>
+-->
+<!--
+						<group col="4" colspan="4">
+							<field name="total_bulk" attrs="{'invisible':[('bulk_pay' ,'=' ,False)]}"/>
+							<field name="bulk_state" attrs="{'invisible':[('bulk_pay' ,'=' ,False)]}" readonly ="1"/>
+						</group>
+-->                                        
+						<group col="4">
+							<field name="fees_collection_line" nolabel="1" colspan="4"  class="fixed_table" open="false">
+								<tree string ="Fees Collection" editable="bottom" create="false" delete="false" open="false">
+									<field name="pay" attrs="{'readonly':[('term_state' ,'in' ,('paid','refund'))]}" />
+									<field name="name" readonly="1"/>
+									<field name="term_divide" readonly="1" invisible="1"/>
+									<field name="partial_payment" readonly="1" invisible="1"/>
+									<field name="amount" readonly="1"/>
+									<field name="concession_amount" readonly="1"/>
+									<field name="concession_type_id" options="{'no_open': True,'no_create':True}" readonly="1"/>
+									<field name="concession_applied" readonly="1"/>
+									<field name="refund_amount" readonly="1"/>
+									<field name="due_amount" readonly="1"/>
+									
+<!--
+									<field name="paid_amount" />
+-->
+									<field name="total_paid" readonly="1"/>
+									<field name="term_state" readonly="1"/>
+								</tree>
+								<form string="Fees Collection">
+									<group col="4" colspan="4">
+										<field name="pay" />
+										<field name="name" readonly="1"/>
+										<field name="term_divide" readonly="1"/>
+										<field name="partial_payment" readonly="1"/>
+										<field name="amount" readonly="1"/>
+										<field name="concession_amount" readonly="1"/>
+										<field name="concession_type_id" options="{'no_open': True,'no_create':True}" readonly="1"/>
+										<field name="concession_applied" readonly="1"/>
+										<field name="due_amount" readonly="1" />
+										<field name="refund_amount" readonly="1"/>
+<!--
+										<field name="paid_amount"/>
+-->
+									    <field name="total_paid" readonly="1"/>
+									    <field name="term_state" readonly="1"/>
+									</group>
+								</form>
+							</field>
+						</group>
+						
+						<table class="fixed_table oe_list_content">
+							<tr>
+								<td></td>
+								<td>Total</td>
+								<td class="oe_number"><field name="total" nolabel="1"/></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td class="oe_number"><field name="due_total" nolabel="1"/></td>
+								<td class="oe_number"><field name="paid_total" nolabel="1"/></td>
+								<td><field name="bulk_term_state" nolabel="1"/></td>
+							</tr>
+						</table>
+<!--
+						<group col="4" colspan="4" class="grand-tot">
+							<field name="total" nolabel="1"/>
+							<field name="due_total" nolabel="1"/>
+							<field name="paid_total" nolabel="1" class="oe_subtotal_footer_separator" />
+						</group>
+-->
+						
+						<group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+						    
+						    
+						</group>
+						<separator string="" colspan="4"/>
+						<group col="2" colspan="2">
+							<field name="pay_due_total" />
+							<field name="pay_amount" />
+							<field name="payment_mode" required="1" class="asterik"/>
+						   <!--  <field name="pos_percentage" readonly="1" class="asterik" attrs="{'invisible':[('payment_mode' ,'!=' ,'card')],'required':[('payment_mode' ,'=' ,'card')]}" />
+							<field name="pos_total" readonly="1" class="asterik" attrs="{'invisible':[('payment_mode' ,'!=' ,'card')],'required':[('payment_mode' ,'=' ,'card')]}"/> -->
+							<field name="cheque_dd" class="asterik" attrs="{'invisible':[('payment_mode' ,'=' ,'cash')],'required':[('payment_mode' ,'!=' ,'cash')]}" />
+							<field name="bank_name" class="asterik" attrs="{'invisible':[('payment_mode' ,'=' ,'cash')],'required':[('payment_mode' ,'!=' ,'cash')]}"/>
+							<field name="remarks"/>
+						</group>
+						<footer>
+							<div class="text-center">
+								<button name="fee_pay" string="Pay Now"  type="object" 
+								class="oe_highlight" attrs="{'invisible':['|',('bulk_term_state' ,'=' ,'paid'),('bulk_term_state' ,'=' ,'refund')]}"
+								    groups="pappaya_core.group_pappaya_national_level_officer,
+								    pappaya_core.group_pappaya_national_level_it_admin,
+								    pappaya_core.group_pappaya_national_level_fin_admin,
+								    pappaya_core.group_pappaya_school_level_officer,
+								    pappaya_core.group_pappaya_school_level_fin_admin,
+								    pappaya_core.group_pappaya_state_level_officer,
+								    pappaya_core.group_pappaya_state_level_fin_admin"/>
+							</div>
+						</footer>
+<!--
+						<footer>
+							<div class="text-center">
+								<button name="fees_bulk" string="Pay Now"  type="object" class="oe_highlight" attrs="{'invisible':['|',('bulk_pay' ,'=' ,False),('bulk_state','=','paid')]}"/>
+							</div>
+						</footer>
+-->
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="pappaya_fees_collection_tree" model="ir.ui.view">
+			<field name="name">pappaya_fees_collection_tree</field>
+			<field name="model">pappaya.fees.collection</field>
+			<field name="priority" eval="5" />
+			<field name="arch" type="xml">
+				<tree string="Fees Term" create="false" colors="blue:bulk_term_state == 'due';red:bulk_term_state == 'fee_refund' ">
+					<field name="society_id" />
+					<field name="school_id"/>
+					<field name="grade_id"/>
+					<field name="enrollment_number"/>
+					<field name="student_id" />
+					<field name="bulk_term_state" />
+				</tree>
+			</field>
+		</record>
+		
+		
+	<record id="pappaya_fees_collection_search" model="ir.ui.view">
+            <field name="name">pappaya_fees_collection_search</field>
+            <field name="model">pappaya.fees.collection</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Enquiry">
+                    <field name="society_id" />
+					<field name="school_id"/>
+					<field name="grade_id"/>
+					<field name="enrollment_number"/>
+					<field name="student_id"/>
+					<field name="bulk_term_state" />
+                    <newline />
+                    <group expand="0" string="Group By...">
+                    	<filter string="Society" domain="[]" context="{'group_by':'society_id'}" />
+						<filter string="School" domain="[]" context="{'group_by':'school_id'}" />
+						<filter string="Academic Year" domain="[]" context="{'group_by':'academic_year_id'}"/>
+						<filter string="Class" domain="[]" context="{'group_by':'grade_id'}"/>
+						<filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+		
+		<record model="ir.actions.act_window" id="action_pappaya_fees_collection_id">
+			<field name="name">Fees Management > Fees Collection</field>
+			<field name="res_model">pappaya.fees.collection</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="auto_refresh" eval="1"/>
+		</record>
+		
+		<record model="ir.actions.act_window" id="action_pappaya_fees_collection_id1">
+			<field name="name">Fees Management > Fees Collection</field>
+			<field name="res_model">pappaya.fees.collection</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="pappaya_fees_collection_form"/>
+			
+			<!-- <field name="view_ids"
+				eval="[(5, 0, 0),(0, 0, {'view_mode': 'form', 'view_id': ref('pappaya_fees_collection_form')})]" />
+			 --><field name="auto_refresh" eval="1"/>
+		</record>
+		
+		
+		
+		
+	</data>
+</odoo>

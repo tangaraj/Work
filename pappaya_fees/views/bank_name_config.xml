@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record id="bank_name_form" model="ir.ui.view">
+			<field name="name">Bank Name Form</field>
+			<field name="model">bank.name.config</field>
+			<field name="arch" type="xml">
+				<form string="Bank Name" duplicate="0">
+					<sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="1" class="asterik"/>
+                                <field name="bank_code"/>
+                            </group>
+                            <group/>
+                        </group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+        <record id="bank_name_tree" model="ir.ui.view">
+			<field name="name">Bank Name Tree</field>
+			<field name="model">bank.name.config</field>
+			<field name="arch" type="xml">
+				<tree string="Bank Name">
+                    <field name="name"/>
+				    <field name="bank_code"/>
+				</tree>
+			</field>
+		</record>
+
+        <record id="bank_name_search" model="ir.ui.view">
+			<field name="name">Bank Name Search</field>
+			<field name="model">bank.name.config</field>
+            <field name="arch" type="xml">
+                <search string="Bank Name">
+                    <field name="name"/>
+                    <field name="bank_code"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Bank Name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Bank code" domain="[]" context="{'group_by':'bank_code'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_bank_name_config">
+            <field name="name">Bank Name</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bank.name.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</openerp>
